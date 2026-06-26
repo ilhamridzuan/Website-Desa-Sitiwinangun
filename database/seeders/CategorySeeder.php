@@ -10,6 +10,10 @@ class CategorySeeder extends Seeder
 {
     public function run(): void
     {
+        if (DB::table('categories')->count() > 0) {
+            return;
+        }
+
         $categories = [
             [
                 'name'        => 'Kendi & Wadah Air',

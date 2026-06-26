@@ -11,8 +11,12 @@ class DatabaseSeeder extends Seeder
         $this->call([
             AdminUserSeeder::class,
             CategorySeeder::class,
+            SampleArtisanAndCollectionSeeder::class,
+            SampleJelajahBoardStorytellingSeeder::class,
             ProductionStageSeeder::class,
             VillageProfileSeeder::class,
+            HistoryPageSeeder::class,
+            VirtualTourSeeder::class,
         ]);
     }
 }

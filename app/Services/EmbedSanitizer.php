@@ -38,10 +38,31 @@ class EmbedSanitizer
             'span.class',
         ]));
 
+        $config->set('HTML.SafeIframe', true);
+
         // Allow data-* attributes for Pannellum
         $config->set('HTML.Trusted', false);
         $config->set('CSS.AllowedProperties', 'width,height,border,overflow');
         $config->set('URI.SafeIframeRegexp', $this->buildSafeIframeRegexp());
+
+        $def = $config->getHTMLDefinition(true);
+        if ($def) {
+            $def->addElement('iframe', 'Block', 'Flow', 'Common', [
+                'src*' => 'URI',
+                'width' => 'Length',
+                'height' => 'Length',
+                'frameborder' => 'Pixels',
+                'allow' => 'Text',
+                'allowfullscreen' => 'Bool',
+                'title' => 'Text',
+                'loading' => 'Text',
+                'style' => 'Text',
+                'class' => 'Text',
+                'id' => 'ID',
+            ]);
+            $def->addAttribute('div', 'data-panorama', 'Text');
+            $def->addAttribute('div', 'data-config', 'Text');
+        }
 
         $this->purifier = new HTMLPurifier($config);
     }

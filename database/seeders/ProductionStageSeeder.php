@@ -9,6 +9,10 @@ class ProductionStageSeeder extends Seeder
 {
     public function run(): void
     {
+        if (DB::table('production_stages')->count() > 0) {
+            return;
+        }
+
         $stages = [
             [
                 'stage_number' => 1,

@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <title>Virtual Tour 360° — Desa Sitiwinangun</title>
+  <meta charset="utf-8">
+  <meta name="description" content="Jelajahi Kampung Gerabah Sitiwinangun dalam panorama 360° interaktif.">
+  <meta name="viewport"
+    content="target-densitydpi=device-dpi, width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, minimal-ui" />
+  <style>
+    @-ms-viewport {
+      width: device-width;
+    }
+  </style>
+  <link rel="preconnect" href="https://fonts.bunny.net">
+  <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600,700" rel="stylesheet">
+  <link rel="stylesheet" href="vendor/reset.min.css">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* ─── Tokens ──────────────────────────────────────────────── */
+    :root {
+      --amber: #f59e0b;
+      --amber-l: #fde68a;
+      --dark: #120b06;
+      --sidebar-w: 232px;
+    }
+
+    /* ─── Font ────────────────────────────────────────────────── */
+    *,
+    body,
+    .hotspot-tooltip,
+    .info-hotspot-title {
+      font-family: 'Instrument Sans', 'Segoe UI', system-ui, sans-serif !important;
+    }
+
+    /* ─── Panorama: shift right to make room for sidebar ──────── */
+    #pano {
+      top: 0 !important;
+      left: var(--sidebar-w) !important;
+      height: 100% !important;
+      width: calc(100% - var(--sidebar-w)) !important;
+    }
+
+    /* Hide Marzipano's own scene list & its toggle */
+    #sceneList {
+      display: none !important;
+    }
+
+    #sceneListToggle {
+      display: none !important;
+    }
+
+    /* ─── TITLE BAR ───────────────────────────────────────────── */
+    #titleBar {
+      left: var(--sidebar-w) !important;
+      background: linear-gradient(to right, rgba(18, 11, 6, .88) 0%, transparent 100%) !important;
+      border-top: none !important;
+    }
+
+    #titleBar .sceneName {
+      font-size: 14px !important;
+      font-weight: 600 !important;
+      color: #fff !important;
+      letter-spacing: .01em !important;
+    }
+
+    /* ─── LEFT SIDEBAR ────────────────────────────────────────── */
+    #vt-routelist {
+      position: fixed;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      width: var(--sidebar-w);
+      z-index: 9990;
+      background: rgba(13, 7, 3, .98);
+      border-right: 1px solid rgba(245, 158, 11, .14);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* Sidebar heading */
+    .rl-heading {
+      flex-shrink: 0;
+      padding: 12px 13px 10px;
+      border-bottom: 1px solid rgba(245, 158, 11, .12);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .rl-heading-title {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .22em;
+      color: var(--amber-l);
+    }
+
+    .rl-heading-count {
+      font-size: 10px;
+      color: rgba(255, 255, 255, .35);
+      background: rgba(255, 255, 255, .06);
+      border-radius: 999px;
+      padding: 2px 8px;
+    }
+
+    /* Scrollable list */
+    .rl-scroll {
+      flex: 1;
+      overflow-y: auto;
+      padding: 4px 0 16px;
+    }
+
+    .rl-scroll::-webkit-scrollbar {
+      width: 3px;
+    }
+
+    .rl-scroll::-webkit-scrollbar-thumb {
+      background: rgba(245, 158, 11, .25);
+      border-radius: 3px;
+    }
+
+    /* Route label (non-clickable separator) */
+    .rl-label {
+      padding: 9px 13px 3px;
+      font-size: 9.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .18em;
+      color: rgba(255, 255, 255, .28);
+    }
+
+    .rl-label:not(:first-child) {
+      border-top: 1px solid rgba(255, 255, 255, .05);
+      margin-top: 4px;
+      padding-top: 11px;
+    }
+
+    /* Scene button */
+    .rl-scene {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      padding: 7px 13px 7px 16px;
+      width: 100%;
+      border: 0;
+      background: 0;
+      text-align: left;
+      color: rgba(255, 255, 255, .62);
+      font-size: 11.5px;
+      line-height: 1.35;
+      cursor: pointer;
+      transition: background .12s, color .12s;
+      font-family: 'Instrument Sans', system-ui, sans-serif;
+    }
+
+    .rl-scene:hover {
+      background: rgba(245, 158, 11, .09);
+      color: #fff;
+    }
+
+    .rl-scene.active {
+      background: rgba(245, 158, 11, .16);
+      color: var(--amber-l);
+      font-weight: 600;
+      border-left: 3px solid var(--amber);
+      padding-left: 13px;
+    }
+
+    .rl-scene .s-num {
+      flex-shrink: 0;
+      width: 17px;
+      height: 17px;
+      border-radius: 5px;
+      background: rgba(255, 255, 255, .07);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 9px;
+      color: rgba(255, 255, 255, .4);
+      margin-top: 1px;
+    }
+
+    .rl-scene.active .s-num {
+      background: rgba(245, 158, 11, .25);
+      color: var(--amber);
+    }
+
+    /* ─── CONTROL BUTTONS repositioned ───────────────────────── */
+    #fullscreenToggle {
+      position: fixed !important;
+      bottom: 14px !important;
+      right: 10px !important;
+      z-index: 9995 !important;
+    }
+
+    .viewControlButton {
+      position: fixed !important;
+      z-index: 9995 !important;
+    }
+
+    .viewControlButton-1 {
+      top: 10px !important;
+      right: 10px !important;
+    }
+
+    .viewControlButton-2 {
+      top: 48px !important;
+      right: 10px !important;
+    }
+
+    .viewControlButton-3 {
+      top: 10px !important;
+      right: 48px !important;
+    }
+
+    .viewControlButton-4 {
+      top: 10px !important;
+      right: 0px !important;
+    }
+
+    .viewControlButton-5 {
+      top: 86px !important;
+      right: 10px !important;
+    }
+
+    .viewControlButton-6 {
+      top: 124px !important;
+      right: 10px !important;
+    }
+
+    /* ─── HOTSPOTS ────────────────────────────────────────────── */
+    .link-hotspot-icon {
+      filter: drop-shadow(0 2px 8px rgba(0, 0, 0, .6)) !important;
+    }
+
+    .link-hotspot-tooltip {
+      background: rgba(18, 11, 6, .9) !important;
+      border: 1px solid rgba(245, 158, 11, .35) !important;
+      color: #fde68a !important;
+      border-radius: 8px !important;
+      font-size: 11px !important;
+      font-weight: 600 !important;
+      letter-spacing: .04em !important;
+      padding: 5px 12px !important;
+      backdrop-filter: blur(6px) !important;
+    }
+    /* Desktop Info Hotspot Wrapper (no background or border so the collapsed circle looks clean) */
+    .info-hotspot {
+      background: transparent !important;
+      border: none !important;
+      box-shadow: none !important;
+    }
+
+    /* Desktop Info Hotspot Header */
+    .info-hotspot .info-hotspot-header {
+      background-color: rgba(24, 15, 8, 0.98) !important;
+      border: 1px solid rgba(245, 158, 11, 0.35) !important;
+      border-radius: 20px !important; /* Circular when collapsed */
+    }
+
+    /* Expanded header on desktop */
+    .desktop.no-touch .info-hotspot .info-hotspot-header:hover,
+    .desktop .info-hotspot.visible .info-hotspot-header {
+      border-radius: 9px 9px 0 0 !important;
+      border-bottom: 1px solid rgba(245, 158, 11, 0.15) !important;
+    }
+
+    .info-hotspot .info-hotspot-title {
+      color: var(--amber) !important;
+      font-size: 12.5px !important;
+      font-weight: 700 !important;
+    }
+
+    /* Expanded text description on desktop */
+    .info-hotspot .info-hotspot-text {
+      background-color: rgba(18, 11, 6, 0.98) !important;
+      border: 1px solid rgba(245, 158, 11, 0.35) !important;
+      border-top: none !important;
+      border-bottom-left-radius: 9px !important;
+      border-bottom-right-radius: 9px !important;
+      color: rgba(255, 255, 255, .88) !important;
+      font-size: 12.5px !important;
+      line-height: 1.55 !important;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5) !important;
+    }
+
+    .info-hotspot .info-hotspot-close-wrapper {
+      background-color: rgba(124, 45, 18, 0.9) !important; /* Warm terracotta red */
+      border-top-right-radius: 9px !important;
+      border-left: 1px solid rgba(245, 158, 11, 0.2) !important;
+    }
+
+    /* Mobile Info Hotspot Modal Backdrop */
+    .info-hotspot-modal {
+      background-color: rgba(12, 8, 4, 0.65) !important; /* Warm translucent backdrop */
+      backdrop-filter: blur(4px) !important;
+    }
+
+    /* Mobile Info Hotspot Modal Header & Text */
+    .info-hotspot-modal .info-hotspot-header {
+      background-color: rgba(24, 15, 8, 0.98) !important;
+      border: 1px solid rgba(245, 158, 11, 0.35) !important;
+      border-bottom: 1px solid rgba(245, 158, 11, 0.15) !important;
+      border-radius: 12px 12px 0 0 !important;
+    }
+
+    .info-hotspot-modal .info-hotspot-title {
+      color: var(--amber) !important;
+      font-size: 14px !important;
+      font-weight: 700 !important;
+    }
+
+    .info-hotspot-modal .info-hotspot-close-wrapper {
+      background-color: rgba(124, 45, 18, 0.95) !important; /* Warm terracotta red close button */
+      border-top-right-radius: 11px !important;
+      border-left: 1px solid rgba(245, 158, 11, 0.2) !important;
+    }
+
+    .info-hotspot-modal .info-hotspot-close-wrapper:hover {
+      background-color: rgba(245, 158, 11, 0.75) !important; /* Gold hover */
+    }
+
+    .info-hotspot-modal .info-hotspot-text {
+      background-color: rgba(18, 11, 6, 0.98) !important;
+      border: 1px solid rgba(245, 158, 11, 0.35) !important;
+      border-top: none !important;
+      border-radius: 0 0 12px 12px !important;
+      color: rgba(255, 255, 255, 0.9) !important;
+      font-size: 13px !important;
+      line-height: 1.6 !important;
+      padding: 14px !important;
+    }
+
+    /* ─── FULLSCREEN: sidebar still visible, pano fills rest ──── */
+    :fullscreen #pano,
+    :-webkit-full-screen #pano {
+      top: 0 !important;
+      height: 100% !important;
+    }
+
+    :fullscreen #titleBar,
+    :-webkit-full-screen #titleBar {
+      left: var(--sidebar-w) !important;
+    }
+
+    :fullscreen #vt-routelist,
+    :-webkit-full-screen #vt-routelist {
+      position: fixed !important;
+      top: 0 !important;
+    }
+
+    /* ─── MOBILE ──────────────────────────────────────────────── */
+    @media (max-width:680px) {
+      :root {
+        --sidebar-w: 0px;
+      }
+
+      #pano {
+        left: 0 !important;
+        width: 100% !important;
+      }
+
+      #titleBar {
+        left: 0 !important;
+      }
+
+      #vt-routelist {
+        transform: translateX(-100%);
+        width: 240px;
+        transition: transform .26s ease;
+      }
+
+      #vt-routelist.open {
+        transform: translateX(0);
+      }
+
+      #vt-mobile-toggle {
+        display: flex;
+        position: fixed;
+        top: 10px;
+        left: 10px;
+        z-index: 9999;
+        width: 36px;
+        height: 36px;
+        border-radius: 9px;
+        background: rgba(18, 11, 6, .85);
+        border: 1px solid rgba(245, 158, 11, .3);
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        color: #fff;
+      }
+    }
+
+    #vt-mobile-toggle {
+      display: none;
+    }
+  </style>
+  <script>
+    if (window.location.search.includes('bg=1')) {
+      var style = document.createElement('style');
+      style.innerHTML = `
+        #vt-routelist, #titleBar, #fullscreenToggle, #sceneListToggle, .viewControlButton, #vt-mobile-toggle {
+          display: none !important;
+        }
+        #pano {
+          left: 0 !important;
+          width: 100% !important;
+        }
+        .hotspot, .info-hotspot {
+          display: none !important;
+          pointer-events: none !important;
+        }
+      `;
+      document.head.appendChild(style);
+    }
+  </script>
+</head>
+
+<body class="multiple-scenes">
+
+  <!-- Mobile hamburger (shown only on small screens) -->
+  <button id="vt-mobile-toggle" onclick="document.getElementById('vt-routelist').classList.toggle('open')"
+    aria-label="Buka menu">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+      stroke-linecap="round">
+      <line x1="3" y1="6" x2="21" y2="6" />
+      <line x1="3" y1="12" x2="21" y2="12" />
+      <line x1="3" y1="18" x2="21" y2="18" />
+    </svg>
+  </button>
+
+  <!-- ── LEFT SIDEBAR ─────────────────────────────────────────── -->
+  <nav id="vt-routelist" aria-label="Daftar panorama virtual tour">
+
+    <div class="rl-heading">
+      <span class="rl-heading-title">Daftar Panorama</span>
+      <span class="rl-heading-count">31 titik</span>
+    </div>
+
+    <div class="rl-scroll">
+      <button class="rl-scene" data-id="0-kampung-gerabah-start"><span class="s-num">1</span><span>Pintu Masuk Kampung Gerabah (Start)</span></button>
+      <button class="rl-scene" data-id="1-jalan-ke-pengrajin-1-dan-2-lurus"><span class="s-num">2</span><span>Akses Jalan Lurus Menuju Pengrajin 1 &amp; 2</span></button>
+      <button class="rl-scene" data-id="2-jalan-ke-pengrajin-1-dan-2-kanan"><span class="s-num">3</span><span>Akses Jalan Kanan Menuju Pengrajin 1 &amp; 2</span></button>
+      <button class="rl-scene" data-id="3-jalan-ke-pengrajin-1-dan-2-lurus---kanan"><span class="s-num">4</span><span>Akses Jalan Lurus-Kanan Menuju Pengrajin 1 &amp; 2</span></button>
+      <button class="rl-scene" data-id="4-simpang-pengrajin-1-dan-2"><span class="s-num">5</span><span>Persimpangan Jalan Menuju Pengrajin 1 &amp; 2</span></button>
+      <button class="rl-scene" data-id="5-tempat-pembakaran-pengrajin-1"><span class="s-num">6</span><span>Area Pembakaran Gerabah Pengrajin 1</span></button>
+      <button class="rl-scene" data-id="6-tempat-pengrajin-1"><span class="s-num">7</span><span>Rumah Produksi Gerabah Pengrajin 1</span></button>
+      <button class="rl-scene" data-id="7-tempat-pengrajin-2"><span class="s-num">8</span><span>Rumah Produksi Gerabah Pengrajin 2</span></button>
+      <button class="rl-scene" data-id="8-jalan-ke-pengrajin-3"><span class="s-num">9</span><span>Akses Jalan Utama Menuju Pengrajin 3</span></button>
+      <button class="rl-scene" data-id="9-jalan-ke-pengrajin-3-kiri"><span class="s-num">10</span><span>Akses Belok Kiri Menuju Pengrajin 3</span></button>
+      <button class="rl-scene" data-id="10-jalan-ke-pengerajin-3-lurus"><span class="s-num">11</span><span>Akses Jalan Lurus Menuju Pengrajin 3</span></button>
+      <button class="rl-scene" data-id="11-jalan-ke-pengrajin-3-lurus--kanan"><span class="s-num">12</span><span>Akses Jalan Lurus-Kanan Menuju Pengrajin 3</span></button>
+      <button class="rl-scene" data-id="12-persimpangan-ke-pengrajin-3-lurus"><span class="s-num">13</span><span>Persimpangan Jalan Lurus Menuju Pengrajin 3</span></button>
+      <button class="rl-scene" data-id="13-persimpangan-ke-pengrajin-3"><span class="s-num">14</span><span>Persimpangan Jalan Utama Menuju Pengrajin 3</span></button>
+      <button class="rl-scene" data-id="14-warung-ke-arah-pengrajin-3"><span class="s-num">15</span><span>Area Warung Warga Menuju Pengrajin 3</span></button>
+      <button class="rl-scene" data-id="15-persimpangan-ke-pengrajin-3-kiri"><span class="s-num">16</span><span>Persimpangan Jalan Kiri Menuju Pengrajin 3</span></button>
+      <button class="rl-scene" data-id="16-jalan-keluar-ke-jalan-raya"><span class="s-num">17</span><span>Akses Jalan Keluar Menuju Jalan Raya</span></button>
+      <button class="rl-scene" data-id="17-jalan-ke-arah-jalab-raya-kanan"><span class="s-num">18</span><span>Akses Jalan Kanan Menuju Jalan Raya</span></button>
+      <button class="rl-scene" data-id="18-jalan-ke-pengerajin-3"><span class="s-num">19</span><span>Akses Jalan Penghubung Menuju Pengrajin 3</span></button>
+      <button class="rl-scene" data-id="19-halaman-pengrajin-3"><span class="s-num">20</span><span>Halaman Depan Rumah Pengrajin 3</span></button>
+      <button class="rl-scene" data-id="20-tempat-pembakaran-pengrajin-3"><span class="s-num">21</span><span>Area Pembakaran Gerabah Pengrajin 3</span></button>
+      <button class="rl-scene" data-id="21-tempat-pembuatan-kerajinan-pengrajin-3"><span class="s-num">22</span><span>Rumah Produksi Gerabah Pengrajin 3</span></button>
+      <button class="rl-scene" data-id="22-gapura-masjid-keramat"><span class="s-num">23</span><span>Area Gapura Utama Masjid Keramat</span></button>
+      <button class="rl-scene" data-id="23-simpang-pengrajin-4-dan-masjid-keramat"><span class="s-num">24</span><span>Persimpangan Jalan Menuju Pengrajin 4 &amp; Masjid Keramat</span></button>
+      <button class="rl-scene" data-id="24-halaman-pengrajin-4"><span class="s-num">25</span><span>Halaman Depan Rumah Pengrajin 4</span></button>
+      <button class="rl-scene" data-id="25-tempat-pengrajin-4"><span class="s-num">26</span><span>Rumah Produksi Gerabah Pengrajin 4</span></button>
+      <button class="rl-scene" data-id="26-jalan-ke-masjid-keramat"><span class="s-num">27</span><span>Akses Jalan Menuju Masjid Keramat</span></button>
+      <button class="rl-scene" data-id="27-jalan-di-samping-masjid-keramat"><span class="s-num">28</span><span>Akses Jalan Samping Masjid Keramat</span></button>
+      <button class="rl-scene" data-id="28-halaman-masjid-keramat"><span class="s-num">29</span><span>Halaman Depan Masjid Keramat</span></button>
+      <button class="rl-scene" data-id="29-tampak-dalam-masjid-keramat"><span class="s-num">30</span><span>Interior Utama Masjid Keramat</span></button>
+      <button class="rl-scene" data-id="30-tampak-dalam-masjid-keramat-kuno"><span class="s-num">31</span><span>Interior Masjid Keramat Kuno</span></button>
+    </div>
+  </nav>
+
+  <!-- ── Panorama viewer ──────────────────────────────────────── -->
+  <div id="pano"></div>
+
+  <!-- Marzipano's own scene list (hidden; still needed for its JS) -->
+  <div id="sceneList">
+    <ul class="scenes">
+      <a href="javascript:void(0)" class="scene" data-id="0-kampung-gerabah-start">
+        <li class="text">Pintu Masuk Kampung Gerabah (Start)</li>
+      </a>
+      <a href="javascript:void(0)" class="scene" data-id="1-jalan-ke-pengrajin-1-dan-2-lurus">
+        <li class="text">Akses Jalan Lurus Menuju Pengrajin 1 &amp; 2</li>
+      </a>
+      <a href="javascript:void(0)" class="scene" data-id="2-jalan-ke-pengrajin-1-dan-2-kanan">
+        <li class="text">Akses Jalan Kanan Menuju Pengrajin 1 &amp; 2</li>
+      </a>
+      <a href="javascript:void(0)" class="scene" data-id="3-jalan-ke-pengrajin-1-dan-2-lurus---kanan">
+        <li class="text">Akses Jalan Lurus-Kanan Menuju Pengrajin 1 &amp; 2</li>
+      </a>
+      <a href="javascript:void(0)" class="scene" data-id="4-simpang-pengrajin-1-dan-2">
+        <li class="text">Persimpangan Jalan Menuju Pengrajin 1 &amp; 2</li>
+      </a>
+      <a href="javascript:void(0)" class="scene" data-id="5-tempat-pembakaran-pengrajin-1">
+        <li class="text">Area Pembakaran Gerabah Pengrajin 1</li>
+      </a>
+      <a href="javascript:void(0)" class="scene" data-id="6-tempat-pengrajin-1">
+        <li class="text">Rumah Produksi Gerabah Pengrajin 1</li>
+      </a>
+      <a href="javascript:void(0)" class="scene" data-id="7-tempat-pengrajin-2">
+        <li class="text">Rumah Produksi Gerabah Pengrajin 2</li>
+      </a>
+      <a href="javascript:void(0)" class="scene" data-id="8-jalan-ke-pengrajin-3">
+        <li class="text">Akses Jalan Utama Menuju Pengrajin 3</li>
+      </a>
+      <a href="javascript:void(0)" class="scene" data-id="9-jalan-ke-pengrajin-3-kiri">
+        <li class="text">Akses Belok Kiri Menuju Pengrajin 3</li>
+      </a>
+      <a href="javascript:void(0)" class="scene" data-id="10-jalan-ke-pengerajin-3-lurus">
+        <li class="text">Akses Jalan Lurus Menuju Pengrajin 3</li>
+      </a>
+      <a href="javascript:void(0)" class="scene" data-id="11-jalan-ke-pengrajin-3-lurus--kanan">
+        <li class="text">Akses Jalan Lurus-Kanan Menuju Pengrajin 3</li>
+      </a>
+      <a href="javascript:void(0)" class="scene" data-id="12-persimpangan-ke-pengrajin-3-lurus">
+        <li class="text">Persimpangan Jalan Lurus Menuju Pengrajin 3</li>
+      </a>
+      <a href="javascript:void(0)" class="scene" data-id="13-persimpangan-ke-pengrajin-3">
+        <li class="text">Persimpangan Jalan Utama Menuju Pengrajin 3</li>
+      </a>
+      <a href="javascript:void(0)" class="scene" data-id="14-warung-ke-arah-pengrajin-3">
+        <li class="text">Area Warung Warga Menuju Pengrajin 3</li>
+      </a>
+      <a href="javascript:void(0)" class="scene" data-id="15-persimpangan-ke-pengrajin-3-kiri">
+        <li class="text">Persimpangan Jalan Kiri Menuju Pengrajin 3</li>
+      </a>
+      <a href="javascript:void(0)" class="scene" data-id="16-jalan-keluar-ke-jalan-raya">
+        <li class="text">Akses Jalan Keluar Menuju Jalan Raya</li>
+      </a>
+      <a href="javascript:void(0)" class="scene" data-id="17-jalan-ke-arah-jalab-raya-kanan">
+        <li class="text">Akses Jalan Kanan Menuju Jalan Raya</li>
+      </a>
+      <a href="javascript:void(0)" class="scene" data-id="18-jalan-ke-pengerajin-3">
+        <li class="text">Akses Jalan Penghubung Menuju Pengrajin 3</li>
+      </a>
+      <a href="javascript:void(0)" class="scene" data-id="19-halaman-pengrajin-3">
+        <li class="text">Halaman Depan Rumah Pengrajin 3</li>
+      </a>
+      <a href="javascript:void(0)" class="scene" data-id="20-tempat-pembakaran-pengrajin-3">
+        <li class="text">Area Pembakaran Gerabah Pengrajin 3</li>
+      </a>
+      <a href="javascript:void(0)" class="scene" data-id="21-tempat-pembuatan-kerajinan-pengrajin-3">
+        <li class="text">Rumah Produksi Gerabah Pengrajin 3</li>
+      </a>
+      <a href="javascript:void(0)" class="scene" data-id="22-gapura-masjid-keramat">
+        <li class="text">Area Gapura Utama Masjid Keramat</li>
+      </a>
+      <a href="javascript:void(0)" class="scene" data-id="23-simpang-pengrajin-4-dan-masjid-keramat">
+        <li class="text">Persimpangan Jalan Menuju Pengrajin 4 &amp; Masjid Keramat</li>
+      </a>
+      <a href="javascript:void(0)" class="scene" data-id="24-halaman-pengrajin-4">
+        <li class="text">Halaman Depan Rumah Pengrajin 4</li>
+      </a>
+      <a href="javascript:void(0)" class="scene" data-id="25-tempat-pengrajin-4">
+        <li class="text">Rumah Produksi Gerabah Pengrajin 4</li>
+      </a>
+      <a href="javascript:void(0)" class="scene" data-id="26-jalan-ke-masjid-keramat">
+        <li class="text">Akses Jalan Menuju Masjid Keramat</li>
+      </a>
+      <a href="javascript:void(0)" class="scene" data-id="27-jalan-di-samping-masjid-keramat">
+        <li class="text">Akses Jalan Samping Masjid Keramat</li>
+      </a>
+      <a href="javascript:void(0)" class="scene" data-id="28-halaman-masjid-keramat">
+        <li class="text">Halaman Depan Masjid Keramat</li>
+      </a>
+      <a href="javascript:void(0)" class="scene" data-id="29-tampak-dalam-masjid-keramat">
+        <li class="text">Interior Utama Masjid Keramat</li>
+      </a>
+      <a href="javascript:void(0)" class="scene" data-id="30-tampak-dalam-masjid-keramat-kuno">
+        <li class="text">Interior Masjid Keramat Kuno</li>
+      </a>
+    </ul>
+  </div>
+
+
+
+  <!-- Marzipano controls -->
+
+  <!-- autorotateToggle required by index.js — hidden visually -->
+  <a href="javascript:void(0)" id="autorotateToggle" style="display:none !important;">
+    <img class="icon off" src="img/play.png"><img class="icon on" src="img/pause.png">
+  </a>
+  <a href="javascript:void(0)" id="fullscreenToggle">
+    <img class="icon off" src="img/fullscreen.png"><img class="icon on" src="img/windowed.png">
+  </a>
+  <a href="javascript:void(0)" id="sceneListToggle">
+    <img class="icon off" src="img/expand.png"><img class="icon on" src="img/collapse.png">
+  </a>
+  <a href="javascript:void(0)" id="viewUp" class="viewControlButton viewControlButton-1"><img class="icon"
+      src="img/up.png"></a>
+  <a href="javascript:void(0)" id="viewDown" class="viewControlButton viewControlButton-2"><img class="icon"
+      src="img/down.png"></a>
+  <a href="javascript:void(0)" id="viewLeft" class="viewControlButton viewControlButton-3"><img class="icon"
+      src="img/left.png"></a>
+  <a href="javascript:void(0)" id="viewRight" class="viewControlButton viewControlButton-4"><img class="icon"
+      src="img/right.png"></a>
+  <a href="javascript:void(0)" id="viewIn" class="viewControlButton viewControlButton-5"><img class="icon"
+      src="img/plus.png"></a>
+  <a href="javascript:void(0)" id="viewOut" class="viewControlButton viewControlButton-6"><img class="icon"
+      src="img/minus.png"></a>
+
+  <script src="vendor/screenfull.min.js"></script>
+  <script src="vendor/bowser.min.js"></script>
+  <script src="vendor/marzipano.js"></script>
+  <script src="data.js"></script>
+  <script src="index.js"></script>
+  <script>
+    // Sync active highlight in our sidebar with Marzipano's internal state
+    (function () {
+      var observer = new MutationObserver(function () {
+        var cur = document.querySelector('#sceneList .scene.current');
+        var activeId = cur ? cur.getAttribute('data-id') : null;
+        document.querySelectorAll('#vt-routelist .rl-scene').forEach(function (btn) {
+          var active = btn.getAttribute('data-id') === activeId;
+          btn.classList.toggle('active', active);
+          if (active) btn.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+        });
+      });
+      observer.observe(document.getElementById('sceneList'), {
+        attributes: true, subtree: true, attributeFilter: ['class']
+      });
+
+      // Wire sidebar clicks → Marzipano
+      document.querySelectorAll('#vt-routelist .rl-scene').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var mz = document.querySelector('#sceneList .scene[data-id="' + btn.getAttribute('data-id') + '"]');
+          if (mz) mz.click();
+          if (window.innerWidth <= 680)
+            document.getElementById('vt-routelist').classList.remove('open');
+        });
+      });
+    })();
+  </script>
+</body>
+
+</html>

@@ -18,10 +18,11 @@ return new class extends Migration
             $table->longText('history_origin');
             $table->longText('philosophy')->nullable();
             $table->longText('technique');
-            $table->text('materials');
-            $table->foreignId('artisan_id')->constrained('artisans')->restrictOnDelete();
-            $table->string('location', 255);
-            $table->smallInteger('year')->unsigned();
+            $table->text('materials')->nullable();
+            $table->foreignId('artisan_id')->nullable()->constrained('artisans')->nullOnDelete();
+            $table->string('location', 255)->nullable();
+            $table->smallInteger('year')->nullable()->unsigned();
+            $table->enum('type', ['koleksi', 'pola'])->default('koleksi');
             $table->enum('status', ['draft', 'published'])->default('draft');
             $table->foreignId('created_by')->nullable()->constrained('users')->nullOnDelete();
             $table->timestamps();

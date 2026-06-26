@@ -26,3 +26,8 @@ Homestead.json
 Homestead.yaml
 Thumbs.db
 *.docx
+
+# Marzipano source/raw/temporary files
+/public/marzipano/zip001/
+/public/marzipano/zip002/
+/marzipano-output/
