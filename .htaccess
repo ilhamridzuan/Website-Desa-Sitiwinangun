@@ -5,6 +5,13 @@
 
     RewriteEngine On
 
+    # Arahkan request /storage/... ke public/storage/...
+    RewriteRule ^storage/(.*)$ public/storage/$1 [L]
+
+    # Allow direct access to build assets
+    RewriteCond %{REQUEST_URI} ^/build/
+    RewriteRule ^ - [L]
+
     # Handle Authorization Header
     RewriteCond %{HTTP:Authorization} .
     RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]

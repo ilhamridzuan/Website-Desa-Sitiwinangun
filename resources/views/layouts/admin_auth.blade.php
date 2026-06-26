@@ -11,6 +11,9 @@
 
     <title>@yield('title', 'Login Admin') — {{ config('app.name', 'Desa Sitiwinangun') }}</title>
 
+    {{-- Favicon --}}
+    <link rel="icon" type="image/svg+xml" href="{{ asset('favicon.svg') }}?v=2">
+
     <!-- Styles / Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
