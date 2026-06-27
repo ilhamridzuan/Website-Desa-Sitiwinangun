@@ -5,6 +5,12 @@
 
     RewriteEngine On
 
+    # Arahkan request /storage/... ke folder public/storage/...
+    RewriteRule ^storage/(.*)$ public/storage/$1 [L]
+
+    # Serve asset folders
+    RewriteRule ^(marzipano|vt360|heroimg|build)/(.*)$ public/$1/$2 [L]
+
     # Handle Authorization Header
     RewriteCond %{HTTP:Authorization} .
     RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
