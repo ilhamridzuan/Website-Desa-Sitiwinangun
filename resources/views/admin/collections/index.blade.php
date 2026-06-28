@@ -101,7 +101,7 @@
             </div>
         @else
             <div class="overflow-x-auto w-full">
-                <table class="table table-zebra w-full text-sm">
+                <table class="table table-zebra w-full text-sm min-w-[900px]">
                     <thead>
                         <tr class="text-base-content/70">
                             <th>Thumbnail</th>
@@ -116,7 +116,7 @@
                     <tbody>
                         @foreach($collections as $collection)
                             <tr class="hover:bg-base-200/50 transition-colors">
-                                <td>
+                                <td class="whitespace-nowrap">
                                     <div class="avatar">
                                         <div class="mask mask-squircle w-10 h-10 bg-primary/10 flex items-center justify-center">
                                             @if($collection->photo_url)
@@ -130,39 +130,39 @@
                                     </div>
                                 </td>
                                 <td>
-                                    <div class="flex items-center gap-2">
-                                        <div class="font-bold text-base-content">{{ $collection->name }}</div>
+                                    <div class="flex items-center gap-2 whitespace-nowrap">
+                                        <div class="font-bold text-base-content whitespace-nowrap">{{ $collection->name }}</div>
                                         @if($collection->type === 'pola')
-                                            <span class="badge badge-accent badge-xs font-semibold">Pola</span>
+                                            <span class="badge badge-accent badge-xs font-semibold whitespace-nowrap">Pola</span>
                                         @else
-                                            <span class="badge badge-info badge-xs font-semibold text-white">Koleksi</span>
+                                            <span class="badge badge-info badge-xs font-semibold text-white whitespace-nowrap">Koleksi</span>
                                         @endif
                                     </div>
-                                    <div class="text-xs text-base-content/50 truncate max-w-xs">{{ $collection->slug }}</div>
+                                    <div class="text-xs text-base-content/50 truncate max-w-xs" title="{{ $collection->slug }}">{{ $collection->slug }}</div>
                                 </td>
-                                <td>
+                                <td class="whitespace-nowrap">
                                     @if($collection->category)
-                                        <span class="badge text-white badge-sm font-semibold" style="background-color: {{ $collection->category->color_hex ?? '#6B7280' }}">
+                                        <span class="badge text-white badge-sm font-semibold whitespace-nowrap" style="background-color: {{ $collection->category->color_hex ?? '#6B7280' }}">
                                             {{ $collection->category->name }}
                                         </span>
                                     @else
                                         <span class="text-base-content/40">-</span>
                                     @endif
                                 </td>
-                                <td>
+                                <td class="whitespace-nowrap">
                                     {{ $collection->artisan->name ?? '-' }}
                                 </td>
-                                <td>
+                                <td class="whitespace-nowrap">
                                     {{ $collection->year ?? '-' }}
                                 </td>
-                                <td>
+                                <td class="whitespace-nowrap">
                                     @if($collection->status === 'published')
-                                        <span class="badge badge-success badge-sm text-white font-medium">Published</span>
+                                        <span class="badge badge-success badge-sm text-white font-medium whitespace-nowrap">Published</span>
                                     @else
-                                        <span class="badge badge-warning badge-sm text-white font-medium">Draft</span>
+                                        <span class="badge badge-warning badge-sm text-white font-medium whitespace-nowrap">Draft</span>
                                     @endif
                                 </td>
-                                <td class="text-center">
+                                <td class="text-center whitespace-nowrap">
                                     <div class="flex items-center justify-center gap-1">
                                         <a href="{{ route('admin.collections.edit', $collection) }}" class="btn btn-ghost btn-xs text-primary gap-1 hover:bg-primary/10">
                                             <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">

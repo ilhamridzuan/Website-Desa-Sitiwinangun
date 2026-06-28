@@ -72,12 +72,7 @@ Route::prefix('admin')->group(function () {
             ->defaults('module', 'village-profile')
             ->name('admin.village-profile.update');
 
-        Route::get('history', [App\Http\Controllers\Admin\StaticContentController::class, 'edit'])
-            ->defaults('module', 'history')
-            ->name('admin.history.edit');
-        Route::put('history', [App\Http\Controllers\Admin\StaticContentController::class, 'update'])
-            ->defaults('module', 'history')
-            ->name('admin.history.update');
+
 
         // Board Members CRUD
         Route::resource('board-members', App\Http\Controllers\Admin\BoardMemberController::class)
@@ -98,8 +93,7 @@ Route::prefix('admin')->group(function () {
         Route::put('storytelling/chapters', [App\Http\Controllers\Admin\StorytellingDocController::class, 'updateChapters'])
             ->name('admin.storytelling.update');
 
-        // Virtual Tour
-        Route::get('virtual-tour', [App\Http\Controllers\Admin\VirtualTourController::class, 'index'])->name('admin.virtual-tour.index');
+
 
         // Production Stages
         Route::get('production', [App\Http\Controllers\Admin\ProductionStageController::class, 'index'])->name('admin.production.index');

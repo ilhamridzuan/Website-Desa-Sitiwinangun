@@ -151,14 +151,7 @@ class BackendCrudTest extends TestCase
         Storage::disk('public')->assertExists($collection->photo_url);
     }
 
-    /**
-     * Test Virtual Tour Index View.
-     */
-    public function test_admin_can_view_virtual_tour_index(): void
-    {
-        $response = $this->actingAs($this->admin)->get(route('admin.virtual-tour.index'));
-        $response->assertStatus(200);
-    }
+
 
     /**
      * Test Village Profile update.
@@ -224,29 +217,7 @@ class BackendCrudTest extends TestCase
         Storage::disk('public')->assertMissing($photoToDelete);
     }
 
-    public function test_admin_can_update_history(): void
-    {
-        $response = $this->actingAs($this->admin)->put(route('admin.history.update'), [
-            'desa_title' => 'Sejarah Desa Baru',
-            'desa_content' => 'Narasi baru desa abdimas.',
-            'gerabah_title' => 'Sejarah Gerabah Baru',
-            'gerabah_content' => 'Narasi baru gerabah abdimas.',
-        ]);
 
-        $response->assertRedirect();
-        
-        $this->assertDatabaseHas('history_pages', [
-            'page_key' => 'desa_history',
-            'title' => 'Sejarah Desa Baru',
-            'content' => 'Narasi baru desa abdimas.',
-        ]);
-
-        $this->assertDatabaseHas('history_pages', [
-            'page_key' => 'gerabah_history',
-            'title' => 'Sejarah Gerabah Baru',
-            'content' => 'Narasi baru gerabah abdimas.',
-        ]);
-    }
 
     public function test_admin_can_manage_board_members(): void
     {

@@ -80,7 +80,7 @@
             </div>
         @else
             <div class="overflow-x-auto w-full">
-                <table class="table table-zebra w-full text-sm">
+                <table class="table table-zebra w-full text-sm min-w-[900px]">
                     <thead>
                         <tr class="text-base-content/70">
                             <th>Foto</th>
@@ -111,21 +111,21 @@
                                     @endif
                                 </td>
                                 <td>
-                                    <div class="font-bold text-base-content">{{ $member->name }}</div>
+                                    <div class="font-bold text-base-content whitespace-nowrap">{{ $member->name }}</div>
                                 </td>
                                 <td>
-                                    <span class="badge badge-outline font-medium">{{ $member->position }}</span>
+                                    <span class="badge badge-outline h-auto py-1.5 px-3 text-center whitespace-normal leading-tight max-w-[180px] inline-flex font-medium">{{ $member->position }}</span>
                                 </td>
-                                <td class="font-sans text-xs">
+                                <td class="font-sans text-xs whitespace-nowrap">
                                     {{ $member->phone ?? '-' }}
                                 </td>
-                                <td class="font-sans text-xs">
+                                <td class="font-sans text-xs whitespace-nowrap">
                                     {{ $member->email ?? '-' }}
                                 </td>
-                                <td class="text-center font-semibold font-sans">
+                                <td class="text-center font-semibold font-sans whitespace-nowrap">
                                     {{ $member->sort_order }}
                                 </td>
-                                <td class="text-center">
+                                <td class="text-center whitespace-nowrap">
                                     <div class="flex items-center justify-center gap-1">
                                         <a href="{{ route('admin.board-members.edit', $member) }}" class="btn btn-ghost btn-xs text-primary gap-1 hover:bg-primary/10">
                                             <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
