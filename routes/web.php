@@ -121,5 +121,9 @@ Route::prefix('admin')->group(function () {
                 'update' => 'admin.inventory.update',
                 'destroy' => 'admin.inventory.destroy',
             ]);
+
+        // Settings / Profile
+        Route::get('settings', [App\Http\Controllers\Admin\SettingController::class, 'index'])->name('admin.settings.index');
+        Route::put('settings', [App\Http\Controllers\Admin\SettingController::class, 'update'])->name('admin.settings.update');
     });
 });
