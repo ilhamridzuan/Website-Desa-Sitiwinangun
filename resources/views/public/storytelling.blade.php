@@ -81,22 +81,22 @@
             <button @click="activeTab = 'fungsional'"
                     :class="activeTab === 'fungsional' ? 'bg-primary text-primary-content font-bold' : 'bg-base-200 text-base-content/70 hover:bg-base-300/60'"
                     class="flex-1 md:flex-none text-left px-5 py-4 rounded-xl transition-all duration-200 text-xs md:text-sm font-semibold flex items-center gap-3">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V9a2 2 0 00-2-2h-1V5a2 2 0 00-2-2H9a2 2 0 00-2 2v2H6a2 2 0 00-2 2v4a8 8 0 0016 0z"/></svg> Fungsional
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"/></svg> Fungsional
             </button>
             <button @click="activeTab = 'religi'"
                     :class="activeTab === 'religi' ? 'bg-primary text-primary-content font-bold' : 'bg-base-200 text-base-content/70 hover:bg-base-300/60'"
                     class="flex-1 md:flex-none text-left px-5 py-4 rounded-xl transition-all duration-200 text-xs md:text-sm font-semibold flex items-center gap-3">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 21h18M5 21V9l7-5 7 5v12M9 21v-6h6v6"/></svg> Religi
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg> Religi
             </button>
             <button @click="activeTab = 'simbolik'"
                     :class="activeTab === 'simbolik' ? 'bg-primary text-primary-content font-bold' : 'bg-base-200 text-base-content/70 hover:bg-base-300/60'"
                     class="flex-1 md:flex-none text-left px-5 py-4 rounded-xl transition-all duration-200 text-xs md:text-sm font-semibold flex items-center gap-3">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.955a1 1 0 00.95.69h4.159c.969 0 1.371 1.24.588 1.81l-3.365 2.444a1 1 0 00-.364 1.118l1.286 3.955c.3.921-.755 1.688-1.539 1.118l-3.365-2.444a1 1 0 00-1.176 0l-3.365 2.444c-.784.57-1.838-.197-1.539-1.118l1.286-3.955a1 1 0 00-.364-1.118L4.06 9.382c-.783-.57-.38-1.81.588-1.81h4.159a1 1 0 00.95-.69l1.292-3.955z"/></svg> Simbolik
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg> Simbolik
             </button>
             <button @click="activeTab = 'estetis'"
                     :class="activeTab === 'estetis' ? 'bg-primary text-primary-content font-bold' : 'bg-base-200 text-base-content/70 hover:bg-base-300/60'"
                     class="flex-1 md:flex-none text-left px-5 py-4 rounded-xl transition-all duration-200 text-xs md:text-sm font-semibold flex items-center gap-3">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V7a4 4 0 014-4h10a4 4 0 014 4v10a4 4 0 01-4 4H7zm0-4h.01M11 17h.01M15 17h.01"/></svg> Estetis &amp; Hias
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-3.356a6.342 6.342 0 00-1.857-5.356M7 7h3.356a6.342 6.342 0 011.857 5.356"/></svg> Estetis &amp; Hias
             </button>
         </div>
 
@@ -105,7 +105,7 @@
             {{-- Fungsional --}}
             <div x-show="activeTab === 'fungsional'" x-transition class="space-y-4">
                 <h3 class="font-serif text-xl font-bold text-primary flex items-center gap-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V9a2 2 0 00-2-2h-1V5a2 2 0 00-2-2H9a2 2 0 00-2 2v2H6a2 2 0 00-2 2v4a8 8 0 0016 0z"/></svg> Kriya Fungsional
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"/></svg> Kriya Fungsional
                 </h3>
                 <p class="text-sm text-base-content/85 leading-relaxed text-justify">
                     {!! $bab2->content['fungsional_text'] ?? 'Meliputi pendil, paso, kuali, kendi, gentong air, buyung, dan pedaringan yang dekat dengan kehidupan dapur dan sumur warga. Kendi berfungsi sebagai teknologi pendingin alami. Gentong dan pedaringan menyimbolkan penyimpanan, ketahanan pangan, dan kesiapan rumah tangga yang bersahaja dengan alam.' !!}
@@ -115,7 +115,7 @@
             {{-- Religi --}}
             <div x-show="activeTab === 'religi'" x-transition class="space-y-4">
                 <h3 class="font-serif text-xl font-bold text-primary flex items-center gap-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 21h18M5 21V9l7-5 7 5v12M9 21v-6h6v6"/></svg> Kriya Religi &amp; Ritual
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg> Kriya Religi &amp; Ritual
                 </h3>
                 <p class="text-sm text-base-content/85 leading-relaxed text-justify">
                     {!! $bab2->content['religi_text'] ?? 'Diwakili oleh Memolo (mastaka/hiasan pucuk atap kubah masjid kuno Cirebon) dan Padasan (gentong tanah liat berlubang pancuran untuk berwudu). Air wudu yang keluar dari padasan tanah melambangkan kesucian lahir-batin dan pengingat bahwa manusia diciptakan dari unsur tanah yang bersahaja.' !!}
@@ -125,7 +125,7 @@
             {{-- Simbolik --}}
             <div x-show="activeTab === 'simbolik'" x-transition class="space-y-4">
                 <h3 class="font-serif text-xl font-bold text-primary flex items-center gap-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.955a1 1 0 00.95.69h4.159c.969 0 1.371 1.24.588 1.81l-3.365 2.444a1 1 0 00-.364 1.118l1.286 3.955c.3.921-.755 1.688-1.539 1.118l-3.365-2.444a1 1 0 00-1.176 0l-3.365 2.444c-.784.57-1.838-.197-1.539-1.118l1.286-3.955a1 1 0 00-.364-1.118L4.06 9.382c-.783-.57-.38-1.81.588-1.81h4.159a1 1 0 00.95-.69l1.292-3.955z"/></svg> Kriya Simbolik
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg> Kriya Simbolik
                 </h3>
                 <p class="text-sm text-base-content/85 leading-relaxed text-justify">
                     {!! $bab2->content['simbolik_text'] ?? 'Perwujudan makhluk mitologis Cirebonan yang dibentuk menjadi patung tanah liat terakota, seperti Paksinagaliman, Macan Ali, Singabarong, Burok, Jatayu, Garuda Mungkur, dan Gajah Mungkur. Awalnya dibentuk sebagai pernyataan kekuatan, perlindungan, dan penyatuan unsur-unsur kekuasaan tradisional.' !!}
@@ -135,7 +135,7 @@
             {{-- Estetis --}}
             <div x-show="activeTab === 'estetis'" x-transition class="space-y-4">
                 <h3 class="font-serif text-xl font-bold text-primary flex items-center gap-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V7a4 4 0 014-4h10a4 4 0 014 4v10a4 4 0 01-4 4H7zm0-4h.01M11 17h.01M15 17h.01"/></svg> Kriya Estetis &amp; Hias
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-3.356a6.342 6.342 0 00-1.857-5.356M7 7h3.356a6.342 6.342 0 011.857 5.356"/></svg> Kriya Estetis &amp; Hias
                 </h3>
                 <p class="text-sm text-base-content/85 leading-relaxed text-justify">
                     {!! $bab2->content['estetis_text'] ?? 'Meliputi vas bunga kontemporer, pot tanaman, jambangan air hias, dan topeng dinding dekoratif. Kategori ini menyatukan tradisi turun-temurun pengolahan tanah liat lokal dengan inovasi interior modern, menjadi jembatan ekonomi kreatif yang relevan dengan selera pasar modern tanpa menghapus identitas asalnya.' !!}

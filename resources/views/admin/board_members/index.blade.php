@@ -104,8 +104,8 @@
                                         </div>
                                     @else
                                         <div class="avatar placeholder">
-                                            <div class="bg-neutral text-neutral-content rounded-full w-10 h-10">
-                                                <span class="text-xs font-bold">{{ strtoupper(substr($member->name, 0, 2)) }}</span>
+                                            <div class="w-10 h-10 rounded-full bg-primary/10 text-primary font-bold font-serif text-sm flex items-center justify-center">
+                                                <span>{{ collect(explode(' ', $member->name))->map(fn($w) => strtoupper(substr($w, 0, 1)))->take(2)->implode('') }}</span>
                                             </div>
                                         </div>
                                     @endif
