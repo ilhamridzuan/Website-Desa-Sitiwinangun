@@ -107,7 +107,7 @@
                                 <li><a href="{{ route('public.history') }}">Sejarah Gerabah</a></li>
                                 <li><a href="{{ route('public.locations') }}">Jelajah Desa</a></li>
                                 <li><a href="{{ route('public.board') }}">Info Pengurus</a></li>
-                                <li><a href="{{ route('public.storytelling') }}">Storytelling PDF</a></li>
+                                <li><a href="{{ route('public.storytelling') }}">Kisah Kriya</a></li>
                             </ul>
                         </details>
                     </li>
@@ -223,7 +223,7 @@
                 <li>
                     <a href="{{ route('public.storytelling') }}" class="{{ request()->routeIs('public.storytelling') ? 'active' : '' }}">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
-                        Storytelling PDF
+                        Kisah Kriya
                     </a>
                 </li>
             </ul>
@@ -271,7 +271,7 @@
                     <a href="{{ route('public.history') }}" class="link link-hover text-sm">Sejarah Gerabah</a>
                     <a href="{{ route('public.locations') }}" class="link link-hover text-sm">Jelajah Desa</a>
                     <a href="{{ route('public.board') }}" class="link link-hover text-sm">Info Pengurus</a>
-                    <a href="{{ route('public.storytelling') }}" class="link link-hover text-sm">Storytelling PDF</a>
+                    <a href="{{ route('public.storytelling') }}" class="link link-hover text-sm">Kisah Kriya</a>
                 </nav>
 
                 {{-- Column 4: Kontak --}}
