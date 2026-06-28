@@ -5,8 +5,6 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Artisan;
 use App\Models\Collection;
-use App\Models\InventoryItem;
-
 class DashboardController extends Controller
 {
     /**

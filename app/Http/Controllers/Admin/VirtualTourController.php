@@ -6,9 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Models\VirtualTour;
 use App\Services\ActivityLogService;
 use App\Services\EmbedSanitizer;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-
 class VirtualTourController extends Controller
 {
     protected ActivityLogService $logger;
