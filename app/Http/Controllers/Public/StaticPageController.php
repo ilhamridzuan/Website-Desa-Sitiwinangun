@@ -52,11 +52,15 @@ class StaticPageController extends Controller
     }
 
     /**
-     * Display list of digital storytelling PDF documents.
+     * Display storytelling chapters view.
      */
     public function storytelling()
     {
-        $docs = StorytellingDoc::orderBy('sort_order')->get();
-        return view('public.storytelling', compact('docs'));
+        $bab2 = \App\Models\StorytellingChapter::firstOrCreate(['chapter_key' => 'bab_2']);
+        $bab3 = \App\Models\StorytellingChapter::firstOrCreate(['chapter_key' => 'bab_3']);
+        $bab4 = \App\Models\StorytellingChapter::firstOrCreate(['chapter_key' => 'bab_4']);
+        $bab5 = \App\Models\StorytellingChapter::firstOrCreate(['chapter_key' => 'bab_5']);
+        
+        return view('public.storytelling', compact('bab2', 'bab3', 'bab4', 'bab5'));
     }
 }
