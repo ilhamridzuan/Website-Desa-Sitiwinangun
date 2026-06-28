@@ -98,6 +98,14 @@ Route::prefix('admin')->group(function () {
         Route::put('storytelling/chapters', [App\Http\Controllers\Admin\StorytellingDocController::class, 'updateChapters'])
             ->name('admin.storytelling.update');
 
+        // Virtual Tour
+        Route::get('virtual-tour', [App\Http\Controllers\Admin\VirtualTourController::class, 'index'])->name('admin.virtual-tour.index');
+
+        // Production Stages
+        Route::get('production', [App\Http\Controllers\Admin\ProductionStageController::class, 'index'])->name('admin.production.index');
+        Route::get('production/{production}/edit', [App\Http\Controllers\Admin\ProductionStageController::class, 'edit'])->name('admin.production.edit');
+        Route::put('production/{production}', [App\Http\Controllers\Admin\ProductionStageController::class, 'update'])->name('admin.production.update');
+
         // Locations CRUD
         Route::resource('locations', App\Http\Controllers\Admin\ProductionLocationController::class)
             ->except(['show'])
