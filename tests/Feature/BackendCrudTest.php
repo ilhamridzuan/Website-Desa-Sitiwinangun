@@ -153,31 +153,12 @@ class BackendCrudTest extends TestCase
     }
 
     /**
-     * Test Virtual Tour Configuration & Rollback.
+     * Test Virtual Tour Index View.
      */
-    public function test_admin_can_update_virtual_tour_and_rollback(): void
+    public function test_admin_can_view_virtual_tour_index(): void
     {
-        $response = $this->actingAs($this->admin)->put(route('admin.virtual-tour.update'), [
-            'title' => 'Tour Baru',
-            'description' => 'Deskripsi Baru',
-            'embed_type' => 'iframe',
-            'embed_code' => '<iframe src="https://www.google.com/maps/embed"></iframe>',
-            'is_active' => true,
-        ]);
-
-        $response->assertRedirect(route('admin.virtual-tour.index'));
-        $this->assertDatabaseHas('virtual_tour', [
-            'title' => 'Tour Baru',
-            'embed_type' => 'iframe',
-        ]);
-
-        $tour = VirtualTour::first();
-        $this->assertCount(1, $tour->version_history);
-
-        // Test rollback
-        $version = $tour->version_history[0]['version'];
-        $rollbackResponse = $this->actingAs($this->admin)->post(route('admin.virtual-tour.rollback', $version));
-        $rollbackResponse->assertRedirect(route('admin.virtual-tour.index'));
+        $response = $this->actingAs($this->admin)->get(route('admin.virtual-tour.index'));
+        $response->assertStatus(200);
     }
 
     /**

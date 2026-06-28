@@ -100,10 +100,6 @@ Route::prefix('admin')->group(function () {
 
         // Virtual Tour
         Route::get('virtual-tour', [App\Http\Controllers\Admin\VirtualTourController::class, 'index'])->name('admin.virtual-tour.index');
-        Route::get('virtual-tour/edit', [App\Http\Controllers\Admin\VirtualTourController::class, 'edit'])->name('admin.virtual-tour.edit');
-        Route::put('virtual-tour', [App\Http\Controllers\Admin\VirtualTourController::class, 'update'])->name('admin.virtual-tour.update');
-        Route::post('virtual-tour/preview', [App\Http\Controllers\Admin\VirtualTourController::class, 'preview'])->name('admin.virtual-tour.preview');
-        Route::post('virtual-tour/rollback/{version}', [App\Http\Controllers\Admin\VirtualTourController::class, 'rollback'])->name('admin.virtual-tour.rollback');
 
         // Production Stages
         Route::get('production', [App\Http\Controllers\Admin\ProductionStageController::class, 'index'])->name('admin.production.index');
