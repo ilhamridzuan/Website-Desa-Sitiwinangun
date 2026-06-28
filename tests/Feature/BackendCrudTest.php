@@ -11,7 +11,6 @@ use App\Models\User;
 use App\Models\VirtualTour;
 use App\Models\VillageProfile;
 use App\Models\BoardMember;
-use App\Models\StorytellingDoc;
 use App\Models\ProductionLocation;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;

@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Models\BoardMember;
 use App\Models\HistoryPage;
 use App\Models\ProductionLocation;
-use App\Models\StorytellingDoc;
 use App\Models\VillageProfile;
 
 class StaticPageController extends Controller
