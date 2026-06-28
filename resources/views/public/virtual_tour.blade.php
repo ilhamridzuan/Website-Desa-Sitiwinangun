@@ -304,11 +304,11 @@
                 <div class="grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-6">
                     {{-- Viewer --}}
                     <div class="flex flex-col gap-3">
-                        <div class="flex items-center justify-between gap-4 bg-accent/10 text-base-content px-4 py-3 rounded-2xl border border-accent/20 text-sm">
-                            <p class="font-medium">🖱 Drag/geser untuk 360° · Scroll/pinch zoom · Klik ikon panah untuk berpindah lokasi</p>
+                        <div class="flex flex-col sm:flex-row items-center justify-between gap-3 bg-accent/10 text-base-content px-4 py-3 rounded-2xl border border-accent/20 text-xs sm:text-sm">
+                            <p class="font-medium text-center sm:text-left">🖱 Drag/geser untuk 360° · Scroll/pinch zoom · Klik ikon panah untuk berpindah lokasi</p>
                             <button
                                 onclick="(function(){var el=document.getElementById('marzipano-frame-wrap');el.requestFullscreen?el.requestFullscreen():el.webkitRequestFullscreen&&el.webkitRequestFullscreen()})()"
-                                class="btn btn-warning btn-sm rounded-full shrink-0"
+                                class="btn btn-warning btn-sm rounded-full shrink-0 w-full sm:w-auto"
                                 id="marzipano-fullscreen-btn"
                             >⛶ Layar Penuh</button>
                         </div>
