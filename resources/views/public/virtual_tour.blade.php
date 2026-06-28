@@ -277,20 +277,20 @@
                         </div>
                     </div>
 
-                    <div class="card bg-gradient-to-br from-primary to-neutral text-primary-content shadow-xl overflow-hidden">
+                    <div class="card bg-base-100 shadow-xl border border-base-300 overflow-hidden">
                         <div class="card-body">
-                            <span class="text-xs uppercase tracking-[.28em] text-primary-content/70 font-semibold">Dari Tanah Menjadi Warisan</span>
-                            <h3 class="font-serif text-2xl font-bold">Tur Rumah Produksi & Desa</h3>
-                            <p class="text-sm leading-relaxed text-primary-content/75">
+                            <span class="text-xs uppercase tracking-[.28em] text-base-content/60 font-semibold">Dari Tanah Menjadi Warisan</span>
+                            <h3 class="font-serif text-2xl font-bold text-primary">Tur Rumah Produksi & Desa</h3>
+                            <p class="text-sm leading-relaxed text-base-content/70">
                                 Dokumentasi ini membantu pengunjung merasakan atmosfer ruang kerja kriya Sitiwinangun secara imersif sebelum berkunjung langsung.
                             </p>
-                            <div class="stats stats-vertical bg-primary-content/10 text-primary-content mt-2">
+                            <div class="stats stats-vertical bg-base-200 text-base-content mt-2">
                                 <div class="stat py-3">
-                                    <div class="stat-title text-primary-content/60">Panorama</div>
-                                    <div class="stat-value text-2xl">{{ count($tourConfig['scenes'] ?? []) }}</div>
+                                    <div class="stat-title text-base-content/60">Panorama</div>
+                                    <div class="stat-value text-2xl text-primary">{{ count($tourConfig['scenes'] ?? []) }}</div>
                                 </div>
                                 <div class="stat py-3">
-                                    <div class="stat-title text-primary-content/60">Viewer</div>
+                                    <div class="stat-title text-base-content/60">Viewer</div>
                                     <div class="stat-value text-2xl">Pannellum</div>
                                 </div>
                             </div>
@@ -323,9 +323,9 @@
                                 <span class="loading loading-spinner loading-lg text-warning"></span>
                                 <p class="text-xs tracking-[.25em] uppercase text-amber-100/60">Memuat virtual tour…</p>
                             </div>
-                            <iframe
+                             <iframe
                                 id="marzipano-iframe"
-                                src="/marzipano/sitiwinangun/index.html"
+                                src="/marzipano/sitiwinangun/index.html?v={{ time() }}"
                                 width="100%"
                                 height="100%"
                                 frameborder="0"
@@ -341,18 +341,18 @@
 
                     {{-- Info sidebar --}}
                     <aside class="space-y-4">
-                        <div class="card bg-gradient-to-br from-primary to-neutral text-primary-content shadow-xl overflow-hidden">
+                        <div class="card bg-base-100 shadow-xl border border-base-300 overflow-hidden">
                             <div class="card-body">
-                                <span class="text-xs uppercase tracking-[.28em] text-primary-content/70 font-semibold">Dari Tanah Menjadi Warisan</span>
-                                <h2 class="card-title font-serif text-xl">{{ $tour->title }}</h2>
-                                <p class="text-sm leading-relaxed text-primary-content/75">{{ $tour->description }}</p>
-                                <div class="stats stats-vertical bg-primary-content/10 text-primary-content mt-2">
+                                <span class="text-xs uppercase tracking-[.28em] text-base-content/60 font-semibold">Dari Tanah Menjadi Warisan</span>
+                                <h2 class="card-title font-serif text-xl text-primary">{{ $tour->title }}</h2>
+                                <p class="text-sm leading-relaxed text-base-content/70">{{ $tour->description }}</p>
+                                <div class="stats stats-vertical bg-base-200 text-base-content mt-2">
                                     <div class="stat py-3">
-                                        <div class="stat-title text-primary-content/60">Titik Panorama</div>
-                                        <div class="stat-value text-2xl">31</div>
+                                        <div class="stat-title text-base-content/60">Titik Panorama</div>
+                                        <div class="stat-value text-2xl text-primary">31</div>
                                     </div>
                                     <div class="stat py-3">
-                                        <div class="stat-title text-primary-content/60">Viewer</div>
+                                        <div class="stat-title text-base-content/60">Viewer</div>
                                         <div class="stat-value text-2xl">Marzipano</div>
                                     </div>
                                 </div>
@@ -376,8 +376,17 @@
                 </div>
             </div>
             <script>
-            // Auto-resize Marzipano iframe to fill viewport height better
+            // Auto-resize Marzipano iframe to fill viewport height better and forward scene query param
             (function() {
+                var parentParams = new URLSearchParams(window.location.search);
+                var sceneParam = parentParams.get('scene');
+                if (sceneParam) {
+                    var iframe = document.getElementById('marzipano-iframe');
+                    if (iframe) {
+                        iframe.src = '/marzipano/sitiwinangun/index.html?v={{ time() }}&scene=' + encodeURIComponent(sceneParam);
+                    }
+                }
+
                 var wrap = document.getElementById('marzipano-frame-wrap');
                 if (!wrap) return;
                 function resize() {

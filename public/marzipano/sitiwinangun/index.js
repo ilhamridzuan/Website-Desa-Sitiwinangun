@@ -387,6 +387,24 @@
   }
 
   // Display the initial scene.
-  switchScene(scenes[0]);
+  var initialScene = scenes[0];
+  var hash = window.location.hash;
+  if (hash) {
+    var sceneId = hash.substring(1); // remove '#'
+    var foundScene = findSceneById(sceneId);
+    if (foundScene) {
+      initialScene = foundScene;
+    }
+  } else {
+    var urlParams = new URLSearchParams(window.location.search);
+    var sceneParam = urlParams.get('scene');
+    if (sceneParam) {
+      var foundScene = findSceneById(sceneParam);
+      if (foundScene) {
+        initialScene = foundScene;
+      }
+    }
+  }
+  switchScene(initialScene);
 
 })();

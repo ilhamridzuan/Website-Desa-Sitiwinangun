@@ -16,9 +16,9 @@
     <form action="{{ route('admin.virtual-tour.update') }}" 
           method="POST" 
           x-data="{ 
-              embedCode: '{{ old('embed_code', $tour->embed_code ?? '') }}',
+              embedCode: '{{ addslashes(old('embed_code', $tour->embed_code ?? '')) }}',
               isPreviewLoading: false,
-              previewContent: '{{ old('embed_code') ? '' : ($tour->sanitized_code ?? '') }}',
+              previewContent: '{{ addslashes(old('embed_code') ? '' : ($tour->sanitized_code ?? '')) }}',
               previewError: '',
               getPreview() {
                   if (!this.embedCode.trim()) {
