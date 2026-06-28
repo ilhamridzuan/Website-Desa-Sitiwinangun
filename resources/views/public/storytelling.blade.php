@@ -6,14 +6,11 @@
 @section('content')
 
 {{-- Hero Section --}}
-<section class="relative bg-neutral text-neutral-content py-24 px-4 overflow-hidden bg-batik-pattern">
-    <div class="absolute inset-0 bg-black/60 z-0"></div>
-    <div class="max-w-4xl mx-auto text-center relative z-10 animate-fade-in-up">
-        <span class="text-xs uppercase tracking-[.3em] text-primary font-bold">Digital Storytelling</span>
-        <h1 class="font-serif text-4xl md:text-5xl font-bold mt-3 mb-6 text-white leading-tight">
-            Dari Tanah Menjadi Warisan
-        </h1>
-        <p class="text-sm md:text-base text-gray-300 max-w-2xl mx-auto leading-relaxed">
+<section class="bg-base-200 bg-batik-pattern py-16 px-4">
+    <div class="max-w-7xl mx-auto text-center">
+        <span class="text-sm font-semibold uppercase tracking-wider text-primary">Digital Storytelling</span>
+        <h1 class="section-heading text-center text-3xl md:text-4xl animate-fade-in-up mt-2">Dari Tanah Menjadi Warisan</h1>
+        <p class="text-base-content/60 max-w-2xl mx-auto mt-4 animate-fade-in-up leading-relaxed" style="animation-delay:0.15s">
             Mengenal gerabah Sitiwinangun, kriya tanah liat dari Cirebon yang tumbuh dari tangan pengrajin, tradisi keluarga, dan cerita desa yang diwariskan lintas generasi.
         </p>
     </div>
