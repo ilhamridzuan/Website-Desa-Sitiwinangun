@@ -92,17 +92,11 @@ Route::prefix('admin')->group(function () {
             ]);
 
 
-        // Storytelling CRUD
-        Route::resource('storytelling', App\Http\Controllers\Admin\StorytellingDocController::class)
-            ->except(['show'])
-            ->names([
-                'index' => 'admin.storytelling.index',
-                'create' => 'admin.storytelling.create',
-                'store' => 'admin.storytelling.store',
-                'edit' => 'admin.storytelling.edit',
-                'update' => 'admin.storytelling.update',
-                'destroy' => 'admin.storytelling.destroy',
-            ]);
+        // Storytelling Chapters
+        Route::get('storytelling', [App\Http\Controllers\Admin\StorytellingDocController::class, 'index'])
+            ->name('admin.storytelling.index');
+        Route::put('storytelling/chapters', [App\Http\Controllers\Admin\StorytellingDocController::class, 'updateChapters'])
+            ->name('admin.storytelling.update');
 
         // Locations CRUD
         Route::resource('locations', App\Http\Controllers\Admin\ProductionLocationController::class)
