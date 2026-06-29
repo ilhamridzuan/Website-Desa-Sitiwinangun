@@ -9,7 +9,7 @@
     RewriteRule ^storage/(.*)$ public/storage/$1 [L]
 
     # Serve asset folders
-    RewriteRule ^(marzipano|vt360|heroimg|build)/(.*)$ public/$1/$2 [L]
+    RewriteRule ^(marzipano|vt360|heroimg|build|images)/(.*)$ public/$1/$2 [L]
 
     # Handle Authorization Header
     RewriteCond %{HTTP:Authorization} .
