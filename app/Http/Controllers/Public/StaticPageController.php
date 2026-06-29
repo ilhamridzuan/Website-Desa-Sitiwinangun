@@ -55,10 +55,10 @@ class StaticPageController extends Controller
      */
     public function storytelling()
     {
-        $bab2 = \App\Models\StorytellingChapter::firstOrCreate(['chapter_key' => 'bab_2']);
-        $bab3 = \App\Models\StorytellingChapter::firstOrCreate(['chapter_key' => 'bab_3']);
-        $bab4 = \App\Models\StorytellingChapter::firstOrCreate(['chapter_key' => 'bab_4']);
-        $bab5 = \App\Models\StorytellingChapter::firstOrCreate(['chapter_key' => 'bab_5']);
+        $bab2 = \App\Models\StorytellingChapter::findByKey('bab_2') ?? new \App\Models\StorytellingChapter(['content' => []]);
+        $bab3 = \App\Models\StorytellingChapter::findByKey('bab_3') ?? new \App\Models\StorytellingChapter(['content' => []]);
+        $bab4 = \App\Models\StorytellingChapter::findByKey('bab_4') ?? new \App\Models\StorytellingChapter(['content' => []]);
+        $bab5 = \App\Models\StorytellingChapter::findByKey('bab_5') ?? new \App\Models\StorytellingChapter(['content' => []]);
         
         return view('public.storytelling', compact('bab2', 'bab3', 'bab4', 'bab5'));
     }
