@@ -50,21 +50,42 @@
       display: none !important;
     }
 
-    /* ─── TITLE BAR ───────────────────────────────────────────── */
+    /* ─── TITLE BAR (Floating Badge) ────────────────────────── */
     #titleBar {
-      left: var(--sidebar-w) !important;
-      background: linear-gradient(to right, rgba(18, 11, 6, .88) 0%, transparent 100%) !important;
-      border-top: none !important;
+      position: absolute !important;
+      top: 16px !important;
+      left: 50% !important;
+      transform: translateX(-50%) !important;
+      width: auto !important;
+      max-width: calc(100% - var(--sidebar-w) - 40px) !important;
+      height: auto !important;
+      text-align: center !important;
+      z-index: 9980 !important;
+      background: transparent !important;
+      pointer-events: none !important;
     }
 
     #titleBar .sceneName {
-      font-size: 14px !important;
+      display: inline-block !important;
+      width: auto !important;
+      height: auto !important;
+      max-width: 100% !important;
+      padding: 8px 20px !important;
+      font-size: 13.5px !important;
       font-weight: 600 !important;
+      letter-spacing: .02em !important;
+      border-radius: 999px !important;
+      background: rgba(18, 11, 6, 0.72) !important;
+      backdrop-filter: blur(8px) !important;
+      -webkit-backdrop-filter: blur(8px) !important;
       color: #fff !important;
-      letter-spacing: .01em !important;
+      border: 1px solid rgba(245, 158, 11, 0.25) !important;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35) !important;
+      overflow: hidden !important;
+      text-overflow: ellipsis !important;
+      white-space: nowrap !important;
     }
 
-    /* ─── LEFT SIDEBAR ────────────────────────────────────────── */
     #vt-routelist {
       position: fixed;
       top: 0;
@@ -76,7 +97,7 @@
       border-right: 1px solid rgba(245, 158, 11, .14);
       display: flex;
       flex-direction: column;
-      overflow: hidden;
+      overflow: visible;
     }
 
     /* Sidebar heading */
@@ -351,6 +372,10 @@
       top: 0 !important;
     }
 
+    #vt-mobile-toggle {
+      display: none;
+    }
+
     /* ─── MOBILE ──────────────────────────────────────────────── */
     @media (max-width:680px) {
       :root {
@@ -363,7 +388,8 @@
       }
 
       #titleBar {
-        left: 0 !important;
+        left: 50% !important;
+        transform: translateX(-50%) !important;
       }
 
       #vt-routelist {
@@ -394,8 +420,179 @@
       }
     }
 
-    #vt-mobile-toggle {
-      display: none;
+
+
+    /* ─── LIGHT MODE OVERRIDES ────────────────────────────────── */
+    body.theme-light #vt-routelist {
+      background: rgba(247, 245, 240, 0.98) !important;
+      border-right: 1px solid rgba(139, 92, 26, 0.15) !important;
+    }
+    body.theme-light .rl-heading {
+      border-bottom: 1px solid rgba(139, 92, 26, 0.15) !important;
+    }
+    body.theme-light .rl-heading-title {
+      color: #8b5a1a !important;
+    }
+    body.theme-light .rl-heading-count {
+      color: rgba(60, 40, 20, 0.7) !important;
+      background: rgba(139, 92, 26, 0.08) !important;
+    }
+    body.theme-light .rl-scene {
+      color: rgba(60, 40, 20, 0.75) !important;
+    }
+    body.theme-light .rl-scene:hover {
+      background: rgba(139, 92, 26, 0.08) !important;
+      color: #633f0c !important;
+    }
+    body.theme-light .rl-scene.active {
+      background: rgba(139, 92, 26, 0.14) !important;
+      color: #8b5a1a !important;
+      border-left: 3px solid #8b5a1a !important;
+      padding-left: 13px !important;
+    }
+    body.theme-light .rl-scene .s-num {
+      background: rgba(139, 92, 26, 0.08) !important;
+      color: rgba(60, 40, 20, 0.6) !important;
+    }
+    body.theme-light .rl-scene.active .s-num {
+      background: rgba(139, 92, 26, 0.25) !important;
+      color: #8b5a1a !important;
+    }
+    body.theme-light #titleBar .sceneName {
+      background: rgba(247, 245, 240, 0.88) !important;
+      border: 1px solid rgba(139, 92, 26, 0.28) !important;
+      color: #633f0c !important;
+      box-shadow: 0 4px 16px rgba(139, 92, 26, 0.12) !important;
+    }
+    body.theme-light #vt-mobile-toggle {
+      background: rgba(247, 245, 240, 0.9) !important;
+      border: 1px solid rgba(139, 92, 26, 0.3) !important;
+      color: #8b5a1a !important;
+    }
+
+    /* ─── HOTSPOTS LIGHT MODE OVERRIDES ────────────────────────── */
+    body.theme-light .link-hotspot-tooltip {
+      background: rgba(247, 245, 240, 0.95) !important;
+      border: 1px solid rgba(139, 92, 26, 0.35) !important;
+      color: #633f0c !important;
+      box-shadow: 0 4px 12px rgba(139, 92, 26, 0.15) !important;
+    }
+    body.theme-light .info-hotspot .info-hotspot-header {
+      background-color: rgba(247, 245, 240, 0.98) !important;
+      border: 1px solid rgba(139, 92, 26, 0.35) !important;
+    }
+    body.theme-light .desktop.no-touch .info-hotspot .info-hotspot-header:hover,
+    body.theme-light .desktop .info-hotspot.visible .info-hotspot-header {
+      border-bottom: 1px solid rgba(139, 92, 26, 0.15) !important;
+    }
+    body.theme-light .info-hotspot .info-hotspot-title {
+      color: #8b5a1a !important;
+    }
+    body.theme-light .info-hotspot .info-hotspot-icon {
+      filter: brightness(0.2) !important;
+    }
+    body.theme-light .info-hotspot .info-hotspot-text {
+      background-color: rgba(252, 251, 248, 0.99) !important;
+      border: 1px solid rgba(139, 92, 26, 0.35) !important;
+      border-top: none !important;
+      color: rgba(60, 40, 20, 0.88) !important;
+      box-shadow: 0 10px 30px rgba(139, 92, 26, 0.15) !important;
+    }
+    body.theme-light .info-hotspot .info-hotspot-close-wrapper {
+      border-left: 1px solid rgba(139, 92, 26, 0.2) !important;
+    }
+    body.theme-light .info-hotspot-modal .info-hotspot-header {
+      background-color: rgba(247, 245, 240, 0.98) !important;
+      border: 1px solid rgba(139, 92, 26, 0.35) !important;
+      border-bottom: 1px solid rgba(139, 92, 26, 0.15) !important;
+    }
+    body.theme-light .info-hotspot-modal .info-hotspot-title {
+      color: #8b5a1a !important;
+    }
+    body.theme-light .info-hotspot-modal .info-hotspot-icon {
+      filter: brightness(0.2) !important;
+    }
+    body.theme-light .info-hotspot-modal .info-hotspot-close-wrapper {
+      border-left: 1px solid rgba(139, 92, 26, 0.2) !important;
+    }
+    body.theme-light .info-hotspot-modal .info-hotspot-text {
+      background-color: rgba(252, 251, 248, 0.99) !important;
+      border: 1px solid rgba(139, 92, 26, 0.35) !important;
+      border-top: none !important;
+      color: rgba(60, 40, 20, 0.9) !important;
+    }
+
+    /* ─── COLLAPSIBLE SIDEBAR ────────────────────────────────── */
+    #pano {
+      transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1), width 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    }
+
+    #vt-routelist {
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    }
+
+    body.sidebar-collapsed #vt-routelist {
+      transform: translateX(-100%);
+    }
+
+    body.sidebar-collapsed #pano {
+      left: 0 !important;
+      width: 100% !important;
+    }
+
+    body.sidebar-collapsed #titleBar {
+      max-width: calc(100% - 40px) !important;
+    }
+
+    #vt-desktop-toggle {
+      position: absolute;
+      top: 50%;
+      left: 100%;
+      transform: translateY(-50%);
+      z-index: 9999;
+      width: 20px;
+      height: 52px;
+      background: rgba(18, 11, 6, .85);
+      border: 1px solid rgba(245, 158, 11, .3);
+      border-left: none;
+      border-radius: 0 8px 8px 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: #fff;
+      transition: background 0.2s, color 0.2s;
+    }
+
+    #vt-desktop-toggle:hover {
+      background: var(--amber);
+      color: #000;
+    }
+
+    #vt-toggle-icon {
+      transition: transform 0.3s ease;
+    }
+
+    body.sidebar-collapsed #vt-toggle-icon {
+      transform: rotate(180deg);
+    }
+
+    @media (max-width: 680px) {
+      #vt-desktop-toggle {
+        display: none !important;
+      }
+    }
+
+    /* Light mode for Desktop Toggle */
+    body.theme-light #vt-desktop-toggle {
+      background: rgba(247, 245, 240, 0.9) !important;
+      border: 1px solid rgba(139, 92, 26, 0.3) !important;
+      border-left: none !important;
+      color: #8b5a1a !important;
+    }
+    body.theme-light #vt-desktop-toggle:hover {
+      background: #8b5a1a !important;
+      color: #fff !important;
     }
   </style>
   <script>
@@ -434,6 +631,12 @@
 
   <!-- ── LEFT SIDEBAR ─────────────────────────────────────────── -->
   <nav id="vt-routelist" aria-label="Daftar panorama virtual tour">
+    <!-- Desktop Toggle Button attached to right edge of sidebar -->
+    <button id="vt-desktop-toggle" onclick="document.body.classList.toggle('sidebar-collapsed')" aria-label="Toggle Sidebar">
+      <svg id="vt-toggle-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="15 18 9 12 15 6"></polyline>
+      </svg>
+    </button>
 
     <div class="rl-heading">
       <span class="rl-heading-title">Daftar Panorama</span>
@@ -477,6 +680,10 @@
 
   <!-- ── Panorama viewer ──────────────────────────────────────── -->
   <div id="pano"></div>
+
+  <div id="titleBar">
+    <span class="sceneName"></span>
+  </div>
 
   <!-- Marzipano's own scene list (hidden; still needed for its JS) -->
   <div id="sceneList">
@@ -612,7 +819,7 @@
   <script>
     // Sync active highlight in our sidebar with Marzipano's internal state
     (function () {
-      var observer = new MutationObserver(function () {
+      function syncHighlight() {
         var cur = document.querySelector('#sceneList .scene.current');
         var activeId = cur ? cur.getAttribute('data-id') : null;
         document.querySelectorAll('#vt-routelist .rl-scene').forEach(function (btn) {
@@ -620,10 +827,15 @@
           btn.classList.toggle('active', active);
           if (active) btn.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
         });
-      });
+      }
+
+      var observer = new MutationObserver(syncHighlight);
       observer.observe(document.getElementById('sceneList'), {
         attributes: true, subtree: true, attributeFilter: ['class']
       });
+
+      // Highlight initially on load
+      syncHighlight();
 
       // Wire sidebar clicks → Marzipano
       document.querySelectorAll('#vt-routelist .rl-scene').forEach(function (btn) {
@@ -634,6 +846,31 @@
             document.getElementById('vt-routelist').classList.remove('open');
         });
       });
+    })();
+
+    // Sync parent window theme (light/dark mode) to iframe body
+    (function () {
+      function updateTheme() {
+        try {
+          var parentHtml = window.parent.document.documentElement;
+          var isDark = parentHtml.getAttribute('data-theme') === 'batik-dark';
+          document.body.classList.toggle('theme-light', !isDark);
+          document.body.classList.toggle('theme-dark', isDark);
+        } catch (e) {
+          console.warn("Failed to read theme from parent window:", e);
+        }
+      }
+
+      updateTheme();
+
+      try {
+        var observer = new MutationObserver(updateTheme);
+        observer.observe(window.parent.document.documentElement, {
+          attributes: true, attributeFilter: ['data-theme']
+        });
+      } catch (e) {
+        console.warn("MutationObserver for parent theme setup failed:", e);
+      }
     })();
   </script>
 </body>

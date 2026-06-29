@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Models\BoardMember;
 use App\Models\HistoryPage;
 use App\Models\ProductionLocation;
-use App\Models\StorytellingDoc;
 use App\Models\VillageProfile;
 
 class StaticPageController extends Controller
@@ -52,11 +51,15 @@ class StaticPageController extends Controller
     }
 
     /**
-     * Display list of digital storytelling PDF documents.
+     * Display storytelling chapters view.
      */
     public function storytelling()
     {
-        $docs = StorytellingDoc::orderBy('sort_order')->get();
-        return view('public.storytelling', compact('docs'));
+        $bab2 = \App\Models\StorytellingChapter::findByKey('bab_2') ?? new \App\Models\StorytellingChapter(['content' => []]);
+        $bab3 = \App\Models\StorytellingChapter::findByKey('bab_3') ?? new \App\Models\StorytellingChapter(['content' => []]);
+        $bab4 = \App\Models\StorytellingChapter::findByKey('bab_4') ?? new \App\Models\StorytellingChapter(['content' => []]);
+        $bab5 = \App\Models\StorytellingChapter::findByKey('bab_5') ?? new \App\Models\StorytellingChapter(['content' => []]);
+        
+        return view('public.storytelling', compact('bab2', 'bab3', 'bab4', 'bab5'));
     }
 }

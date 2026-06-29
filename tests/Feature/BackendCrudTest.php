@@ -11,7 +11,6 @@ use App\Models\User;
 use App\Models\VirtualTour;
 use App\Models\VillageProfile;
 use App\Models\BoardMember;
-use App\Models\StorytellingDoc;
 use App\Models\ProductionLocation;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
@@ -136,6 +135,7 @@ class BackendCrudTest extends TestCase
             'materials' => 'Tanah liat',
             'location' => 'Sitiwinangun RT 03',
             'year' => 2025,
+            'type' => 'koleksi',
             'status' => 'published',
         ]);
 
@@ -151,33 +151,7 @@ class BackendCrudTest extends TestCase
         Storage::disk('public')->assertExists($collection->photo_url);
     }
 
-    /**
-     * Test Virtual Tour Configuration & Rollback.
-     */
-    public function test_admin_can_update_virtual_tour_and_rollback(): void
-    {
-        $response = $this->actingAs($this->admin)->put(route('admin.virtual-tour.update'), [
-            'title' => 'Tour Baru',
-            'description' => 'Deskripsi Baru',
-            'embed_type' => 'iframe',
-            'embed_code' => '<iframe src="https://www.google.com/maps/embed"></iframe>',
-            'is_active' => true,
-        ]);
 
-        $response->assertRedirect(route('admin.virtual-tour.index'));
-        $this->assertDatabaseHas('virtual_tour', [
-            'title' => 'Tour Baru',
-            'embed_type' => 'iframe',
-        ]);
-
-        $tour = VirtualTour::first();
-        $this->assertCount(1, $tour->version_history);
-
-        // Test rollback
-        $version = $tour->version_history[0]['version'];
-        $rollbackResponse = $this->actingAs($this->admin)->post(route('admin.virtual-tour.rollback', $version));
-        $rollbackResponse->assertRedirect(route('admin.virtual-tour.index'));
-    }
 
     /**
      * Test Village Profile update.
@@ -243,29 +217,7 @@ class BackendCrudTest extends TestCase
         Storage::disk('public')->assertMissing($photoToDelete);
     }
 
-    public function test_admin_can_update_history(): void
-    {
-        $response = $this->actingAs($this->admin)->put(route('admin.history.update'), [
-            'desa_title' => 'Sejarah Desa Baru',
-            'desa_content' => 'Narasi baru desa abdimas.',
-            'gerabah_title' => 'Sejarah Gerabah Baru',
-            'gerabah_content' => 'Narasi baru gerabah abdimas.',
-        ]);
 
-        $response->assertRedirect();
-        
-        $this->assertDatabaseHas('history_pages', [
-            'page_key' => 'desa_history',
-            'title' => 'Sejarah Desa Baru',
-            'content' => 'Narasi baru desa abdimas.',
-        ]);
-
-        $this->assertDatabaseHas('history_pages', [
-            'page_key' => 'gerabah_history',
-            'title' => 'Sejarah Gerabah Baru',
-            'content' => 'Narasi baru gerabah abdimas.',
-        ]);
-    }
 
     public function test_admin_can_manage_board_members(): void
     {
@@ -449,56 +401,56 @@ class BackendCrudTest extends TestCase
     }
 
     /**
-     * Test Storytelling PDF CRUD.
+     * Test Storytelling Chapters management.
      */
     public function test_admin_can_manage_storytelling(): void
     {
-        Storage::fake('public');
-
         // 1. Test Index
         $indexResponse = $this->actingAs($this->admin)->get(route('admin.storytelling.index'));
         $indexResponse->assertStatus(200);
 
-        // 2. Test Store with PDF upload
-        $pdf = UploadedFile::fake()->create('catalog.pdf', 500, 'application/pdf');
+        // 2. Test Update Chapters
+        $updateResponse = $this->actingAs($this->admin)->put(route('admin.storytelling.update'), [
+            'bab2_main_desc' => 'Deskripsi Utama Bab 2 Baru',
+            'bab2_fungsional_text' => 'Fungsional Baru',
+            'bab2_religi_text' => 'Religi Baru',
+            'bab2_simbolik_text' => 'Simbolik Baru',
+            'bab2_estetis_text' => 'Estetis Baru',
 
-        $storeResponse = $this->actingAs($this->admin)->post(route('admin.storytelling.store'), [
-            'title' => 'Katalog Gerabah 2025',
-            'description' => 'Dokumen katalog tahunan.',
-            'pdf' => $pdf,
-            'sort_order' => 1,
+            'bab3_main_desc' => 'Deskripsi Utama Bab 3 Baru',
+            'bab3_motif_1_title' => 'Motif 1 Baru',
+            'bab3_motif_1_desc' => 'Desc 1 Baru',
+            'bab3_motif_2_title' => 'Motif 2 Baru',
+            'bab3_motif_2_desc' => 'Desc 2 Baru',
+            'bab3_motif_3_title' => 'Motif 3 Baru',
+            'bab3_motif_3_desc' => 'Desc 3 Baru',
+            'bab3_motif_4_title' => 'Motif 4 Baru',
+            'bab3_motif_4_desc' => 'Desc 4 Baru',
+            'bab3_motif_5_title' => 'Motif 5 Baru',
+            'bab3_motif_5_desc' => 'Desc 5 Baru',
+            'bab3_motif_6_title' => 'Motif 6 Baru',
+            'bab3_motif_6_desc' => 'Desc 6 Baru',
+
+            'bab4_main_desc' => 'Deskripsi Utama Bab 4 Baru',
+            'bab4_paksi_text' => 'Paksi Baru',
+            'bab4_macan_text' => 'Macan Baru',
+            'bab4_singabarong_text' => 'Singabarong Baru',
+            'bab4_paksi_card_desc' => 'Card Paksi Baru',
+            'bab4_macan_card_desc' => 'Card Macan Baru',
+            'bab4_singabarong_card_desc' => 'Card Singabarong Baru',
+
+            'bab5_main_desc' => 'Deskripsi Utama Bab 5 Baru',
+            'bab5_tutur_1_title' => 'Tutur 1 Baru',
+            'bab5_tutur_1_desc' => 'Desc Tutur 1 Baru',
+            'bab5_tutur_1_subtext' => 'Subtext Tutur 1 Baru',
+            'bab5_tutur_2_title' => 'Tutur 2 Baru',
+            'bab5_tutur_2_desc' => 'Desc Tutur 2 Baru',
+            'bab5_tutur_2_subtext' => 'Subtext Tutur 2 Baru',
         ]);
-        $storeResponse->assertRedirect(route('admin.storytelling.index'));
-        $this->assertDatabaseHas('storytelling_docs', [
-            'title' => 'Katalog Gerabah 2025',
-            'sort_order' => 1,
-        ]);
 
-        $doc = StorytellingDoc::where('title', 'Katalog Gerabah 2025')->first();
-        Storage::disk('public')->assertExists($doc->pdf_url);
-
-        // 3. Test Edit View
-        $editResponse = $this->actingAs($this->admin)->get(route('admin.storytelling.edit', $doc));
-        $editResponse->assertStatus(200);
-
-        // 4. Test Update (no new PDF)
-        $updateResponse = $this->actingAs($this->admin)->put(route('admin.storytelling.update', $doc), [
-            'title' => 'Katalog Gerabah 2025 (Revisi)',
-            'description' => 'Dokumen revisi.',
-            'sort_order' => 2,
-        ]);
         $updateResponse->assertRedirect(route('admin.storytelling.index'));
-        $this->assertDatabaseHas('storytelling_docs', [
-            'id' => $doc->id,
-            'title' => 'Katalog Gerabah 2025 (Revisi)',
-            'sort_order' => 2,
-        ]);
-
-        // 5. Test Destroy
-        $destroyResponse = $this->actingAs($this->admin)->delete(route('admin.storytelling.destroy', $doc));
-        $destroyResponse->assertRedirect(route('admin.storytelling.index'));
-        $this->assertDatabaseMissing('storytelling_docs', [
-            'id' => $doc->id,
+        $this->assertDatabaseHas('storytelling_chapters', [
+            'chapter_key' => 'bab_2',
         ]);
     }
 

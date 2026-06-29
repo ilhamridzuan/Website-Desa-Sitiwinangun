@@ -16,6 +16,13 @@ class EmbedSanitizer
 
         $config = HTMLPurifier_Config::createDefault();
 
+        // Use Laravel writable storage directory for HTMLPurifier cache to avoid permission issues
+        $cachePath = storage_path('app/htmlpurifier');
+        if (!file_exists($cachePath)) {
+            mkdir($cachePath, 0775, true);
+        }
+        $config->set('Cache.SerializerPath', $cachePath);
+
         // Allow only iframe + safe attributes
         $config->set('HTML.AllowedElements', 'iframe,div,span');
         $config->set('HTML.AllowedAttributes', implode(',', [

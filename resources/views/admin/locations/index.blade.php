@@ -82,7 +82,7 @@
             </div>
         @else
             <div class="overflow-x-auto w-full">
-                <table class="table table-zebra w-full text-sm">
+                <table class="table table-zebra w-full text-sm min-w-[950px]">
                     <thead>
                         <tr class="text-base-content/70">
                             <th>Nama Lokasi & Pengrajin</th>
@@ -136,26 +136,26 @@
                                         </div>
                                     @endif
                                 </td>
-                                <td class="text-center">
+                                <td class="text-center whitespace-nowrap">
                                     @if($loc->is_open_visit)
-                                        <span class="badge badge-success badge-sm badge-outline font-medium">Buka Kunjungan</span>
+                                        <span class="badge badge-success badge-sm badge-outline font-medium whitespace-nowrap">Buka Kunjungan</span>
                                     @else
-                                        <span class="badge badge-ghost badge-sm text-base-content/50">Tutup</span>
+                                        <span class="badge badge-ghost badge-sm text-base-content/50 whitespace-nowrap">Tutup</span>
                                     @endif
                                 </td>
-                                <td class="text-center">
-                                    <div class="flex flex-col items-center justify-center gap-0.5 text-xs text-base-content/60 font-mono">
+                                <td class="text-center whitespace-nowrap">
+                                    <div class="flex flex-col items-center justify-center gap-0.5 text-xs text-base-content/60 font-mono whitespace-nowrap">
                                         <span>{{ number_format($loc->latitude, 6) }}</span>
                                         <span>{{ number_format($loc->longitude, 6) }}</span>
                                     </div>
                                     <a href="https://www.google.com/maps/search/?api=1&query={{ $loc->latitude }},{{ $loc->longitude }}"
                                        target="_blank"
                                        rel="noopener noreferrer"
-                                       class="text-[10px] text-info hover:underline mt-1 inline-block">
+                                       class="text-[10px] text-info hover:underline mt-1 inline-block whitespace-nowrap">
                                         Lihat Peta
                                     </a>
                                 </td>
-                                <td class="text-center">
+                                <td class="text-center whitespace-nowrap">
                                     <div class="flex items-center justify-center gap-1">
                                         <a href="{{ route('admin.locations.edit', $loc) }}" class="btn btn-ghost btn-xs text-primary gap-1 hover:bg-primary/10">
                                             <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">

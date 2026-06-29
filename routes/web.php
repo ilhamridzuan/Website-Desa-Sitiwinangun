@@ -72,12 +72,7 @@ Route::prefix('admin')->group(function () {
             ->defaults('module', 'village-profile')
             ->name('admin.village-profile.update');
 
-        Route::get('history', [App\Http\Controllers\Admin\StaticContentController::class, 'edit'])
-            ->defaults('module', 'history')
-            ->name('admin.history.edit');
-        Route::put('history', [App\Http\Controllers\Admin\StaticContentController::class, 'update'])
-            ->defaults('module', 'history')
-            ->name('admin.history.update');
+
 
         // Board Members CRUD
         Route::resource('board-members', App\Http\Controllers\Admin\BoardMemberController::class)
@@ -92,17 +87,18 @@ Route::prefix('admin')->group(function () {
             ]);
 
 
-        // Storytelling CRUD
-        Route::resource('storytelling', App\Http\Controllers\Admin\StorytellingDocController::class)
-            ->except(['show'])
-            ->names([
-                'index' => 'admin.storytelling.index',
-                'create' => 'admin.storytelling.create',
-                'store' => 'admin.storytelling.store',
-                'edit' => 'admin.storytelling.edit',
-                'update' => 'admin.storytelling.update',
-                'destroy' => 'admin.storytelling.destroy',
-            ]);
+        // Storytelling Chapters
+        Route::get('storytelling', [App\Http\Controllers\Admin\StorytellingDocController::class, 'index'])
+            ->name('admin.storytelling.index');
+        Route::put('storytelling/chapters', [App\Http\Controllers\Admin\StorytellingDocController::class, 'updateChapters'])
+            ->name('admin.storytelling.update');
+
+
+
+        // Production Stages
+        Route::get('production', [App\Http\Controllers\Admin\ProductionStageController::class, 'index'])->name('admin.production.index');
+        Route::get('production/{production}/edit', [App\Http\Controllers\Admin\ProductionStageController::class, 'edit'])->name('admin.production.edit');
+        Route::put('production/{production}', [App\Http\Controllers\Admin\ProductionStageController::class, 'update'])->name('admin.production.update');
 
         // Locations CRUD
         Route::resource('locations', App\Http\Controllers\Admin\ProductionLocationController::class)
@@ -127,5 +123,9 @@ Route::prefix('admin')->group(function () {
                 'update' => 'admin.inventory.update',
                 'destroy' => 'admin.inventory.destroy',
             ]);
+
+        // Settings / Profile
+        Route::get('settings', [App\Http\Controllers\Admin\SettingController::class, 'index'])->name('admin.settings.index');
+        Route::put('settings', [App\Http\Controllers\Admin\SettingController::class, 'update'])->name('admin.settings.update');
     });
 });

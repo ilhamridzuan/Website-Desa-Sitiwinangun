@@ -208,7 +208,7 @@
                 </div>
             @else
                 <div class="overflow-x-auto w-full">
-                    <table class="table table-zebra w-full text-sm">
+                    <table class="table table-zebra w-full text-sm min-w-[800px]">
                         <thead>
                             <tr class="text-base-content/70">
                                 <th>Gambar</th>
@@ -222,7 +222,7 @@
                         <tbody>
                             @foreach($recentCollections as $collection)
                                 <tr class="hover:bg-base-200/50 transition-colors">
-                                    <td>
+                                    <td class="whitespace-nowrap">
                                         <div class="avatar">
                                             <div class="mask mask-squircle w-10 h-10 bg-primary/10 flex items-center justify-center">
                                                 @if($collection->photo_url)
@@ -235,24 +235,24 @@
                                             </div>
                                         </div>
                                     </td>
-                                    <td class="font-semibold text-base-content">
+                                    <td class="font-semibold text-base-content whitespace-nowrap">
                                         {{ $collection->name }}
                                     </td>
-                                    <td>
-                                        <span class="badge badge-outline badge-sm">{{ $collection->category->name ?? '-' }}</span>
+                                    <td class="whitespace-nowrap">
+                                        <span class="badge badge-outline badge-sm whitespace-nowrap">{{ $collection->category->name ?? '-' }}</span>
                                     </td>
-                                    <td>
+                                    <td class="whitespace-nowrap">
                                         {{ $collection->artisan->name ?? '-' }}
                                     </td>
-                                    <td>
+                                    <td class="whitespace-nowrap">
                                         @if($collection->status === 'published')
-                                            <span class="badge badge-success badge-sm text-white">Published</span>
+                                            <span class="badge badge-success badge-sm text-white whitespace-nowrap">Published</span>
                                         @else
-                                            <span class="badge badge-warning badge-sm text-white">Draft</span>
+                                            <span class="badge badge-warning badge-sm text-white whitespace-nowrap">Draft</span>
                                         @endif
                                     </td>
-                                    <td class="text-center">
-                                        <a href="{{ route('admin.collections.edit', $collection->id) }}" class="btn btn-ghost btn-xs text-primary hover:bg-primary/10">
+                                    <td class="text-center whitespace-nowrap">
+                                        <a href="{{ route('admin.collections.edit', $collection->id) }}" class="btn btn-ghost btn-xs text-primary hover:bg-primary/10 whitespace-nowrap">
                                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
                                             </svg>

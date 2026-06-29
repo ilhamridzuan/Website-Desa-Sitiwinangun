@@ -69,7 +69,7 @@
             </div>
         @else
             <div class="overflow-x-auto w-full">
-                <table class="table table-zebra w-full text-sm">
+                <table class="table table-zebra w-full text-sm min-w-[900px]">
                     <thead>
                         <tr class="text-base-content/70">
                             <th>Foto</th>
@@ -84,7 +84,7 @@
                     <tbody>
                         @foreach($artisans as $artisan)
                             <tr class="hover:bg-base-200/50 transition-colors">
-                                <td>
+                                <td class="whitespace-nowrap">
                                     <div class="avatar placeholder">
                                         @if($artisan->photo_url)
                                             <div class="w-10 h-10 rounded-full">
@@ -98,16 +98,16 @@
                                     </div>
                                 </td>
                                 <td>
-                                    <div class="font-bold text-base-content">{{ $artisan->name }}</div>
-                                    <div class="text-xs text-base-content/50">{{ $artisan->address }}</div>
+                                    <div class="font-bold text-base-content whitespace-nowrap">{{ $artisan->name }}</div>
+                                    <div class="text-xs text-base-content/50 max-w-xs truncate" title="{{ $artisan->address }}">{{ $artisan->address }}</div>
                                 </td>
                                 <td>
                                     {{ $artisan->specialty ?? '-' }}
                                 </td>
-                                <td>
+                                <td class="whitespace-nowrap">
                                     {{ $artisan->years_active ?? '-' }}
                                 </td>
-                                <td class="text-center">
+                                <td class="text-center whitespace-nowrap">
                                     <input type="checkbox" 
                                            class="toggle toggle-primary toggle-sm shadow-sm" 
                                            {{ $artisan->is_featured ? 'checked' : '' }} 
@@ -131,10 +131,10 @@
                                                })
                                            " />
                                 </td>
-                                <td class="text-center">
-                                    <span class="badge badge-ghost badge-sm">{{ $artisan->sort_order }}</span>
+                                <td class="text-center whitespace-nowrap">
+                                    <span class="badge badge-ghost badge-sm whitespace-nowrap">{{ $artisan->sort_order }}</span>
                                 </td>
-                                <td class="text-center">
+                                <td class="text-center whitespace-nowrap">
                                     <div class="flex items-center justify-center gap-1">
                                         <a href="{{ route('admin.artisans.edit', $artisan) }}" class="btn btn-ghost btn-xs text-primary gap-1 hover:bg-primary/10">
                                             <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">

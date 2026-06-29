@@ -153,63 +153,71 @@
 @if($locations->count())
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        var centerLat = -6.718889;
-        var centerLng = 108.552222;
+    (function() {
+        function initMap() {
+            var centerLat = -6.700727;
+            var centerLng = 108.456486;
 
-        var map = L.map('locations-map').setView([centerLat, centerLng], 17);
-        window.leafletMap = map;
+            var map = L.map('locations-map').setView([centerLat, centerLng], 16);
+            window.leafletMap = map;
 
-        // Tile layer matching theme (light/dark)
-        var isDark = document.documentElement.getAttribute('data-theme') === 'batik-dark';
-        var tileUrl = isDark 
-            ? 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'
-            : 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png';
-
-        L.tileLayer(tileUrl, {
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
-            maxZoom: 20
-        }).addTo(map);
-
-        // Track markers
-        window.mapMarkers = {};
-
-        var locations = @json($locations);
-        
-        locations.forEach(function(loc) {
-            if (loc.latitude && loc.longitude) {
-                var popupContent = `
-                    <div class="text-sm font-sans p-1">
-                        <h4 class="font-serif font-bold text-primary text-base" style="margin-bottom: 4px;">\${loc.name}</h4>
-                        <p class="text-xs text-base-content/70" style="margin-bottom: 6px;">\${loc.address}</p>
-                        \${loc.main_products ? `<p class="text-xs" style="margin-bottom: 2px;"><strong>Produk:</strong> \${loc.main_products}</p>` : ''}
-                        \${loc.visit_capacity ? `<p class="text-xs" style="margin-bottom: 8px;"><strong>Kapasitas:</strong> \${loc.visit_capacity}</p>` : ''}
-                        <a href="https://maps.google.com/?q=\${loc.latitude},\${loc.longitude}" target="_blank" class="btn btn-xs btn-primary text-white w-full text-center">Petunjuk Rute</a>
-                    </div>
-                `;
-                var marker = L.marker([loc.latitude, loc.longitude]).addTo(map).bindPopup(popupContent);
-                window.mapMarkers[loc.id] = marker;
-            }
-        });
-
-        // Theme updater helper function called by x-effect watcher
-        window.updateLeafletTiles = function(newIsDark) {
-            var newTileUrl = newIsDark 
+            // Tile layer matching theme (light/dark)
+            var isDark = document.documentElement.getAttribute('data-theme') === 'batik-dark';
+            var tileUrl = isDark 
                 ? 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'
-                : 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png';
+                : 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+
+            L.tileLayer(tileUrl, {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+                maxZoom: 19
+            }).addTo(map);
+
+            // Track markers
+            window.mapMarkers = {};
+
+            var locations = @json($locations);
             
-            map.eachLayer(function(layer) {
-                if (layer instanceof L.TileLayer) {
-                    map.removeLayer(layer);
+            locations.forEach(function(loc) {
+                if (loc.latitude && loc.longitude) {
+                    var popupContent = `
+                        <div class="text-sm font-sans p-1">
+                            <h4 class="font-serif font-bold text-primary text-base" style="margin-bottom: 4px;">${loc.name}</h4>
+                            <p class="text-xs text-base-content/70" style="margin-bottom: 6px;">${loc.address}</p>
+                            ${loc.main_products ? `<p class="text-xs" style="margin-bottom: 2px;"><strong>Produk:</strong> ${loc.main_products}</p>` : ''}
+                            ${loc.visit_capacity ? `<p class="text-xs" style="margin-bottom: 8px;"><strong>Kapasitas:</strong> ${loc.visit_capacity}</p>` : ''}
+                            <a href="https://maps.google.com/?q=${loc.latitude},${loc.longitude}" target="_blank" class="btn btn-xs btn-primary text-white w-full text-center">Petunjuk Rute</a>
+                        </div>
+                    `;
+                    var marker = L.marker([loc.latitude, loc.longitude]).addTo(map).bindPopup(popupContent);
+                    window.mapMarkers[loc.id] = marker;
                 }
             });
 
-            L.tileLayer(newTileUrl, {
-                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
-                maxZoom: 20
-            }).addTo(map);
-        };
-    });
+            // Theme updater helper function called by x-effect watcher
+            window.updateLeafletTiles = function(newIsDark) {
+                var newTileUrl = newIsDark 
+                    ? 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'
+                    : 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+                
+                map.eachLayer(function(layer) {
+                    if (layer instanceof L.TileLayer) {
+                        map.removeLayer(layer);
+                    }
+                });
+
+                L.tileLayer(newTileUrl, {
+                    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+                    maxZoom: 19
+                }).addTo(map);
+            };
+        }
+
+        if (document.readyState === 'complete' || document.readyState === 'interactive') {
+            initMap();
+        } else {
+            document.addEventListener('DOMContentLoaded', initMap);
+        }
+    })();
 </script>
 @endif
 @endpush

@@ -90,7 +90,7 @@
                     <div x-show="showTutorial" 
                          x-collapse 
                          x-transition
-                         class="alert alert-info bg-info/10 border-info/20 text-info-content text-xs p-4 mb-4 rounded-btn">
+                         class="alert alert-info bg-info/10 border-info/20 text-info text-xs p-4 mb-4 rounded-btn">
                         <div class="flex flex-col gap-2">
                             <div class="font-bold text-sm">Langkah-langkah menyalin koordinat dari Google Maps:</div>
                             <ol class="list-decimal list-inside space-y-1">

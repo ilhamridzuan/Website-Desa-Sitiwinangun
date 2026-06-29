@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\HistoryPage;
+
 use App\Models\VillageProfile;
 use App\Services\ActivityLogService;
 use App\Services\ImageUploadService;
@@ -37,10 +37,7 @@ class StaticContentController extends Controller
                 }
                 return view('admin.static.village_profile', compact('profile'));
 
-            case 'history':
-                $desa = HistoryPage::findByKey('desa_history');
-                $gerabah = HistoryPage::findByKey('gerabah_history');
-                return view('admin.static.history', compact('desa', 'gerabah'));
+
 
             default:
                 abort(404);
@@ -100,31 +97,7 @@ class StaticContentController extends Controller
                 $this->logger->log('update_village_profile', 'village_profile', $profile->id, $oldData, $profile->toArray());
                 return back()->with('success', 'Profil desa berhasil diperbarui.');
 
-            case 'history':
-                $validated = $request->validate([
-                    'desa_title' => 'required|string|max:255',
-                    'desa_content' => 'required|string',
-                    'gerabah_title' => 'required|string|max:255',
-                    'gerabah_content' => 'required|string',
-                ]);
 
-                $desa = HistoryPage::findByKey('desa_history');
-                $oldDesa = $desa->toArray();
-                $desa->update([
-                    'title' => $validated['desa_title'],
-                    'content' => $validated['desa_content'],
-                ]);
-                $this->logger->log('update_desa_history', 'history_page', $desa->id, $oldDesa, $desa->toArray());
-
-                $gerabah = HistoryPage::findByKey('gerabah_history');
-                $oldGerabah = $gerabah->toArray();
-                $gerabah->update([
-                    'title' => $validated['gerabah_title'],
-                    'content' => $validated['gerabah_content'],
-                ]);
-                $this->logger->log('update_gerabah_history', 'history_page', $gerabah->id, $oldGerabah, $gerabah->toArray());
-
-                return back()->with('success', 'Narasi sejarah berhasil diperbarui.');
 
             default:
                 abort(404);

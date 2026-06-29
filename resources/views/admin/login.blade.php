@@ -204,8 +204,7 @@
 
         {{-- Footer note --}}
         <p class="text-center text-xs text-base-content/40 mt-6">
-            {{ config('app.name', 'Desa Sitiwinangun') }} &copy; {{ date('Y') }}
-            &mdash; Sistem Informasi Digital Kriya
+            &copy; {{ date('Y') }} Museum Digital Gerabah Sitiwinangun. Tim TPLM Universitas Telkom.
         </p>
 
     </div>{{-- /max-w-md --}}
