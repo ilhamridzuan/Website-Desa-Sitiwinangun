@@ -6,7 +6,7 @@ use App\Models\Artisan;
 use App\Models\Category;
 use App\Models\Collection;
 use App\Models\HistoryPage;
-use App\Models\ProductionStage;
+
 use App\Models\User;
 use App\Models\VirtualTour;
 use App\Models\VillageProfile;
@@ -361,44 +361,7 @@ class BackendCrudTest extends TestCase
         ]);
     }
 
-    /**
-     * Test Production Stage CRUD.
-     */
-    public function test_admin_can_render_production_stages_index(): void
-    {
-        // Create a stage first
-        $stage = ProductionStage::create([
-            'stage_number' => 1,
-            'title' => 'Tahap Awal',
-            'description' => 'Tahapan persiapan.',
-        ]);
 
-        $response = $this->actingAs($this->admin)->get(route('admin.production.index'));
-
-        $response->assertStatus(200);
-        $response->assertViewHas('stages');
-    }
-
-    public function test_admin_can_update_production_stage(): void
-    {
-        $stage = ProductionStage::create([
-            'stage_number' => 2,
-            'title' => 'Tahap Dua',
-            'description' => 'Tahapan pembentukan.',
-        ]);
-
-        $response = $this->actingAs($this->admin)->put(route('admin.production.update', $stage), [
-            'title' => 'Tahap Dua Update',
-            'description' => 'Tahapan pembentukan terupdate.',
-        ]);
-
-        $response->assertRedirect(route('admin.production.index'));
-        $this->assertDatabaseHas('production_stages', [
-            'id' => $stage->id,
-            'title' => 'Tahap Dua Update',
-            'description' => 'Tahapan pembentukan terupdate.',
-        ]);
-    }
 
     /**
      * Test Storytelling Chapters management.

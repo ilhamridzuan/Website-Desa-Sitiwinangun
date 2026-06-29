@@ -41,7 +41,16 @@
         document.body.classList.add('desktop');
       }
     };
-    var mql = matchMedia("(max-width: 500px), (max-height: 500px)");
+    // Use parent/top window matching if embedded in an iframe to avoid small iframe height triggering mobile mode
+    var targetWindow = window;
+    try {
+      if (window.parent && window.parent.matchMedia) {
+        targetWindow = window.parent;
+      }
+    } catch (e) {
+      // Cross-origin fallback
+    }
+    var mql = targetWindow.matchMedia("(max-width: 768px), (max-height: 500px)");
     setMode();
     mql.addListener(setMode);
   } else {

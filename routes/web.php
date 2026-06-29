@@ -95,10 +95,7 @@ Route::prefix('admin')->group(function () {
 
 
 
-        // Production Stages
-        Route::get('production', [App\Http\Controllers\Admin\ProductionStageController::class, 'index'])->name('admin.production.index');
-        Route::get('production/{production}/edit', [App\Http\Controllers\Admin\ProductionStageController::class, 'edit'])->name('admin.production.edit');
-        Route::put('production/{production}', [App\Http\Controllers\Admin\ProductionStageController::class, 'update'])->name('admin.production.update');
+
 
         // Locations CRUD
         Route::resource('locations', App\Http\Controllers\Admin\ProductionLocationController::class)
