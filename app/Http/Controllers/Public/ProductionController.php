@@ -3,16 +3,16 @@
 namespace App\Http\Controllers\Public;
 
 use App\Http\Controllers\Controller;
-use App\Models\ProductionStage;
 
 class ProductionController extends Controller
 {
     /**
-     * Display stages of production.
+     * Display stages of production from curated configuration.
      */
     public function index()
     {
-        $stages = ProductionStage::orderBy('stage_number')->get();
+        $stages = config('production_stages', []);
+
         return view('public.production', compact('stages'));
     }
 }

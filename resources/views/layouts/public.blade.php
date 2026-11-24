@@ -8,7 +8,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
     {{-- SEO --}}
-    <title>@yield('title', 'Museum Digital Gerabah Sitiwinangun — Dari Tanah Menjadi Warisan')</title>
+    <title>@yield('title', 'Museum Digital Gerabah Sitiwinangun | Dari Tanah Menjadi Warisan')</title>
     <meta name="description" content="@yield('meta_description', 'Museum digital gerabah Desa Sitiwinangun, Cirebon. Jelajahi koleksi kriya, kisah pengrajin, proses produksi, dan virtual tour 360° desa gerabah bersejarah.')">
     <meta name="keywords" content="gerabah, sitiwinangun, cirebon, kerajinan, kriya, museum digital, batik, tanah liat">
     <meta name="author" content="TPLM Universitas Telkom">
@@ -190,7 +190,7 @@
                 </li>
                 <li>
                     <a href="{{ route('public.production') }}" class="{{ request()->routeIs('public.production') ? 'active' : '' }}">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.455 2.456L21.75 6l-1.036.259a3.375 3.375 0 00-2.455 2.456z"/></svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20h6M9 4h6M10 4v4c-2 1-3.5 3-3.5 5.5S8 19 12 19s5.5-3 5.5-5.5S14 9 12 8V4"/></svg>
                         Proses Produksi
                     </a>
                 </li>
@@ -241,8 +241,8 @@
                 <nav>
                     <h6 class="footer-title font-serif text-primary">Museum Gerabah</h6>
                     <p class="max-w-xs text-sm leading-relaxed opacity-80">
-                        Museum Digital Gerabah Desa Sitiwinangun — platform digital storytelling
-                        yang mendokumentasikan warisan kriya gerabah Cirebon sejak abad ke-15.
+                        Museum Digital Gerabah Desa Sitiwinangun, ruang dokumentasi digital
+                        untuk warisan kriya gerabah Cirebon sejak abad ke-15.
                     </p>
                     <p class="text-xs opacity-60 mt-2 italic">"Dari Tanah Menjadi Warisan"</p>
                 </nav>
