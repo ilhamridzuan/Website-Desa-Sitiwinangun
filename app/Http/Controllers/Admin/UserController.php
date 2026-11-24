@@ -8,6 +8,7 @@ use App\Services\ActivityLogService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
@@ -135,46 +136,57 @@ class UserController extends Controller
 
         $isSelf = $user->id === Auth::id();
         $newRole = $validated['role'];
-        $newActive = $request->has('is_active') ? $request->boolean('is_active') : $user->is_active;
-
-        if ($isSelf && ($newRole !== 'superadmin' || !$newActive)) {
-            return back()
-                ->withInput($request->except(['password', 'password_confirmation']))
-                ->withErrors(['role' => 'Anda tidak dapat menurunkan peran atau menonaktifkan akun yang sedang dipakai.']);
-        }
-
-        if ($this->isLastActiveSuperAdmin($user) && ($newRole !== 'superadmin' || !$newActive)) {
-            return back()
-                ->withInput($request->except(['password', 'password_confirmation']))
-                ->withErrors(['role' => 'Sistem harus memiliki minimal satu superadmin yang aktif.']);
-        }
-
-        $oldSnapshot = $this->sanitizedSnapshot($user);
+        $hasIsActive = $request->has('is_active');
+        $requestedActive = $request->boolean('is_active');
         $passwordChanged = $request->filled('password');
 
-        $user->name = $validated['name'];
-        $user->email = $validated['email'];
-        $user->role = $newRole;
-        $user->is_active = $newActive;
+        $result = DB::transaction(function () use ($user, $validated, $isSelf, $newRole, $hasIsActive, $requestedActive, $passwordChanged) {
+            $lockedTarget = User::whereKey($user->id)->lockForUpdate()->firstOrFail();
+            $newActive = $hasIsActive ? $requestedActive : (bool) $lockedTarget->is_active;
 
-        if ($passwordChanged) {
-            $user->password = Hash::make($validated['password']);
-            $user->failed_attempts = 0;
-            $user->locked_until = null;
+            if ($isSelf && ($newRole !== 'superadmin' || !$newActive)) {
+                return ['error' => 'Anda tidak dapat menurunkan peran atau menonaktifkan akun yang sedang dipakai.'];
+            }
+
+            if ($this->isLastActiveSuperAdminLocked($lockedTarget) && ($newRole !== 'superadmin' || !$newActive)) {
+                return ['error' => 'Sistem harus memiliki minimal satu superadmin yang aktif.'];
+            }
+
+            $oldSnapshot = $this->sanitizedSnapshot($lockedTarget);
+
+            $lockedTarget->name = $validated['name'];
+            $lockedTarget->email = $validated['email'];
+            $lockedTarget->role = $newRole;
+            $lockedTarget->is_active = $newActive;
+
+            if ($passwordChanged) {
+                $lockedTarget->password = Hash::make($validated['password']);
+                $lockedTarget->failed_attempts = 0;
+                $lockedTarget->locked_until = null;
+            }
+
+            $lockedTarget->save();
+
+            $newSnapshot = $this->sanitizedSnapshot($lockedTarget);
+            if ($passwordChanged) {
+                $newSnapshot['password_changed'] = true;
+            }
+
+            $this->activityLog->log('update_user', 'user', $lockedTarget->id, $oldSnapshot, $newSnapshot);
+
+            return ['user' => $lockedTarget];
+        });
+
+        if (isset($result['error'])) {
+            return back()
+                ->withInput($request->except(['password', 'password_confirmation']))
+                ->withErrors(['role' => $result['error']]);
         }
 
-        $user->save();
-
-        $newSnapshot = $this->sanitizedSnapshot($user);
-        if ($passwordChanged) {
-            $newSnapshot['password_changed'] = true;
-        }
-
-        $this->activityLog->log('update_user', 'user', $user->id, $oldSnapshot, $newSnapshot);
-
+        $updatedUser = $result['user'];
         $message = $passwordChanged
-            ? "Data dan password akun {$user->name} berhasil diperbarui."
-            : "Data akun {$user->name} berhasil diperbarui.";
+            ? "Data dan password akun {$updatedUser->name} berhasil diperbarui."
+            : "Data akun {$updatedUser->name} berhasil diperbarui.";
 
         return redirect()
             ->route('admin.users.index')
@@ -192,35 +204,46 @@ class UserController extends Controller
                 ->with('error', 'Anda tidak dapat menonaktifkan akun sendiri.');
         }
 
-        if ($user->is_active && $this->isLastActiveSuperAdmin($user)) {
+        $result = DB::transaction(function () use ($user) {
+            $lockedTarget = User::whereKey($user->id)->lockForUpdate()->firstOrFail();
+
+            if ($lockedTarget->is_active && $this->isLastActiveSuperAdminLocked($lockedTarget)) {
+                return ['error' => 'Superadmin aktif terakhir tidak dapat dinonaktifkan.'];
+            }
+
+            $oldSnapshot = $this->sanitizedSnapshot($lockedTarget);
+            $lockedTarget->is_active = !$lockedTarget->is_active;
+
+            if ($lockedTarget->is_active) {
+                $lockedTarget->failed_attempts = 0;
+                $lockedTarget->locked_until = null;
+            }
+
+            $lockedTarget->save();
+
+            $this->activityLog->log(
+                'toggle_user_status',
+                'user',
+                $lockedTarget->id,
+                $oldSnapshot,
+                $this->sanitizedSnapshot($lockedTarget)
+            );
+
+            return ['user' => $lockedTarget];
+        });
+
+        if (isset($result['error'])) {
             return redirect()
                 ->route('admin.users.index')
-                ->with('error', 'Superadmin aktif terakhir tidak dapat dinonaktifkan.');
+                ->with('error', $result['error']);
         }
 
-        $oldSnapshot = $this->sanitizedSnapshot($user);
-        $user->is_active = !$user->is_active;
-
-        if ($user->is_active) {
-            $user->failed_attempts = 0;
-            $user->locked_until = null;
-        }
-
-        $user->save();
-
-        $this->activityLog->log(
-            'toggle_user_status',
-            'user',
-            $user->id,
-            $oldSnapshot,
-            $this->sanitizedSnapshot($user)
-        );
-
-        $statusLabel = $user->is_active ? 'diaktifkan' : 'dinonaktifkan';
+        $updatedUser = $result['user'];
+        $statusLabel = $updatedUser->is_active ? 'diaktifkan' : 'dinonaktifkan';
 
         return redirect()
             ->route('admin.users.index')
-            ->with('success', "Akun {$user->name} berhasil {$statusLabel}.");
+            ->with('success', "Akun {$updatedUser->name} berhasil {$statusLabel}.");
     }
 
     /**
@@ -234,23 +257,33 @@ class UserController extends Controller
                 ->with('error', 'Anda tidak dapat menghapus akun sendiri.');
         }
 
-        if ($this->isLastActiveSuperAdmin($user)) {
+        $result = DB::transaction(function () use ($user) {
+            $lockedTarget = User::whereKey($user->id)->lockForUpdate()->firstOrFail();
+
+            if ($this->isLastActiveSuperAdminLocked($lockedTarget)) {
+                return ['error' => 'Superadmin aktif terakhir tidak dapat dihapus.'];
+            }
+
+            $oldSnapshot = $this->sanitizedSnapshot($lockedTarget);
+            $name = $lockedTarget->name;
+            $id = $lockedTarget->id;
+
+            $lockedTarget->delete();
+
+            $this->activityLog->log('delete_user', 'user', $id, $oldSnapshot, null);
+
+            return ['name' => $name];
+        });
+
+        if (isset($result['error'])) {
             return redirect()
                 ->route('admin.users.index')
-                ->with('error', 'Superadmin aktif terakhir tidak dapat dihapus.');
+                ->with('error', $result['error']);
         }
-
-        $oldSnapshot = $this->sanitizedSnapshot($user);
-        $name = $user->name;
-        $id = $user->id;
-
-        $user->delete();
-
-        $this->activityLog->log('delete_user', 'user', $id, $oldSnapshot, null);
 
         return redirect()
             ->route('admin.users.index')
-            ->with('success', "Akun {$name} berhasil dihapus.");
+            ->with('success', "Akun {$result['name']} berhasil dihapus.");
     }
 
     private function isLastActiveSuperAdmin(User $user): bool
@@ -261,7 +294,23 @@ class UserController extends Controller
 
         return User::where('role', 'superadmin')
             ->where('is_active', true)
-            ->count() <= 1;
+            ->where('id', '!=', $user->id)
+            ->count() === 0;
+    }
+
+    private function isLastActiveSuperAdminLocked(User $lockedTarget): bool
+    {
+        if ($lockedTarget->role !== 'superadmin' || !$lockedTarget->is_active) {
+            return false;
+        }
+
+        $otherActiveSuperAdmins = User::where('role', 'superadmin')
+            ->where('is_active', true)
+            ->where('id', '!=', $lockedTarget->id)
+            ->lockForUpdate()
+            ->count();
+
+        return $otherActiveSuperAdmins === 0;
     }
 
     /**

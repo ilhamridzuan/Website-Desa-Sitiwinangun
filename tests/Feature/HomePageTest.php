@@ -40,4 +40,15 @@ class HomePageTest extends TestCase
             $response->assertSee($file, false);
         }
     }
+
+    public function test_hero_slideshow_pause_state_pauses_css_progress_bar(): void
+    {
+        $response = $this->get(route('home'));
+        $response->assertOk();
+        $response->assertSee('hero-paused', false);
+
+        $css = file_get_contents(resource_path('css/app.css'));
+        $this->assertStringContainsString('.hero-photo.hero-paused::after', $css);
+        $this->assertStringContainsString('animation-play-state: paused', $css);
+    }
 }

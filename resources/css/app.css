@@ -436,6 +436,19 @@
 /* ============================================================
    Accessibility & Interaction Affordances (R-32, R-39)
    ============================================================ */
+[x-cloak] {
+  display: none !important;
+}
+
+.hero-photo.hero-paused::after,
+.hero-photo.hero-paused .hero-slide img {
+  animation-play-state: paused;
+}
+
+.hero-photo.hero-paused::after {
+  opacity: 0.35;
+}
+
 @layer base {
   a[href],
   button:not(:disabled),

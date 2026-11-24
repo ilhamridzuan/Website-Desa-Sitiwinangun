@@ -253,4 +253,38 @@ class AdminUserManagementTest extends TestCase
         $this->assertSame('staff.baru@sitiwinangun.id', $admin->email);
         $this->assertTrue(Hash::check('Sandibaru@2026', $admin->password));
     }
+
+    public function test_delete_modal_manages_focus_and_superadmin_mutations_use_transactional_locking(): void
+    {
+        $super1 = $this->makeSuperAdmin('super1@sitiwinangun.id');
+        $super2 = $this->makeSuperAdmin('super2@sitiwinangun.id');
+
+        $response = $this->actingAs($super1)->get(route('admin.users.index'));
+        $response->assertOk();
+        $response->assertSee('x-ref="cancelBtn"', false);
+        $response->assertSee('lastFocused', false);
+
+        // Verify UserController uses DB::transaction and lockForUpdate for last-superadmin safety
+        $controllerSource = file_get_contents(app_path('Http/Controllers/Admin/UserController.php'));
+        $this->assertStringContainsString('DB::transaction', $controllerSource);
+        $this->assertStringContainsString('lockForUpdate()', $controllerSource);
+
+        // Super1 demotes Super2 cleanly while 2 active superadmins exist
+        $this->actingAs($super1)->put(route('admin.users.update', $super2), [
+            'name' => $super2->name,
+            'email' => $super2->email,
+            'role' => 'admin',
+            'is_active' => '1',
+        ])->assertRedirect(route('admin.users.index'));
+        $this->assertSame('admin', $super2->fresh()->role);
+
+        // Now only Super1 remains active; cannot demote or deactivate Super1
+        $this->actingAs($super1)->put(route('admin.users.update', $super1), [
+            'name' => $super1->name,
+            'email' => $super1->email,
+            'role' => 'admin',
+            'is_active' => '1',
+        ])->assertSessionHasErrors('role');
+        $this->assertSame('superadmin', $super1->fresh()->role);
+    }
 }

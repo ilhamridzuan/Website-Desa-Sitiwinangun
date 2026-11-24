@@ -373,12 +373,20 @@ document.addEventListener('DOMContentLoaded', () => {
     const iconPlay = document.getElementById('hero-icon-play');
     const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+    const hero = document.getElementById('hero-section');
     let current = 0;
     let timer = null;
     let isVisible = true;
     let userPaused = prefersReducedMotion;
 
+    function syncPausedClass() {
+        if (hero) {
+            hero.classList.toggle('hero-paused', userPaused || !isVisible || document.hidden);
+        }
+    }
+
     function updateToggleUi() {
+        syncPausedClass();
         if (!toggleBtn) return;
         toggleBtn.setAttribute('aria-pressed', userPaused ? 'true' : 'false');
         toggleBtn.setAttribute('aria-label', userPaused ? 'Putar pergantian foto latar' : 'Jeda pergantian foto latar');
@@ -407,6 +415,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function startSlideshow() {
+        syncPausedClass();
         if (timer || userPaused) return;
         timer = setInterval(() => {
             if (isVisible && !userPaused) goToSlide(current + 1);
@@ -416,6 +425,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function stopSlideshow() {
         clearInterval(timer);
         timer = null;
+        syncPausedClass();
     }
 
     if (toggleBtn) {
@@ -431,7 +441,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    const hero = document.getElementById('hero-section');
     if (hero && 'IntersectionObserver' in window) {
         const observer = new IntersectionObserver(([entry]) => {
             isVisible = entry.isIntersecting;

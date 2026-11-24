@@ -45,4 +45,16 @@ class ProductionPageTest extends TestCase
         $response->assertOk();
         $response->assertSee('id="empty-stages"', false);
     }
+
+    public function test_lightbox_is_cloaked_before_alpine_boots_and_manages_keyboard_focus(): void
+    {
+        $response = $this->get(route('public.production'));
+        $response->assertOk();
+        $response->assertSee('style="display: none;"', false);
+        $response->assertSee('x-ref="lightboxClose"', false);
+        $response->assertSee('lastFocused', false);
+
+        $css = file_get_contents(resource_path('css/app.css'));
+        $this->assertStringContainsString('[x-cloak]', $css);
+    }
 }

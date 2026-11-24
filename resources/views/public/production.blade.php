@@ -47,16 +47,39 @@
             lightboxPhotos: [],
             lightboxIndex: 0,
             lightboxStageTitle: '',
+            lastFocused: null,
             openLightbox(stageTitle, photos, index) {
+                this.lastFocused = document.activeElement;
                 this.lightboxStageTitle = stageTitle;
                 this.lightboxPhotos = photos;
                 this.lightboxIndex = index;
                 this.lightboxOpen = true;
                 document.body.style.overflow = 'hidden';
+                this.$nextTick(() => {
+                    this.$refs.lightboxClose?.focus();
+                });
             },
             closeLightbox() {
                 this.lightboxOpen = false;
                 document.body.style.overflow = '';
+                this.$nextTick(() => {
+                    this.lastFocused?.focus();
+                    this.lastFocused = null;
+                });
+            },
+            trapLightboxFocus(event) {
+                if (!this.lightboxOpen || event.key !== 'Tab' || !this.$refs.lightboxDialog) return;
+                const focusables = Array.from(this.$refs.lightboxDialog.querySelectorAll('button:not([disabled])')).filter(el => el.offsetParent !== null);
+                if (!focusables.length) return;
+                const first = focusables[0];
+                const last = focusables[focusables.length - 1];
+                if (event.shiftKey && document.activeElement === first) {
+                    event.preventDefault();
+                    last.focus();
+                } else if (!event.shiftKey && document.activeElement === last) {
+                    event.preventDefault();
+                    first.focus();
+                }
             },
             nextPhoto() {
                 if (this.lightboxPhotos.length < 2) return;
@@ -69,7 +92,8 @@
          }"
          x-on:keydown.escape.window="if (lightboxOpen) closeLightbox()"
          x-on:keydown.arrow-right.window="if (lightboxOpen) nextPhoto()"
-         x-on:keydown.arrow-left.window="if (lightboxOpen) prevPhoto()">
+         x-on:keydown.arrow-left.window="if (lightboxOpen) prevPhoto()"
+         x-on:keydown.tab.window="trapLightboxFocus($event)">
 
     <div class="max-w-6xl mx-auto">
         @if(count($stages))
@@ -229,10 +253,12 @@
     {{-- Accessible Lightbox Modal --}}
     <div x-show="lightboxOpen"
          x-cloak
+         x-ref="lightboxDialog"
          x-transition.opacity
          role="dialog"
          aria-modal="true"
          x-bind:aria-label="'Pratinjau foto ' + lightboxStageTitle"
+         style="display: none;"
          class="fixed inset-0 z-50 flex items-center justify-center bg-black/85 p-4 sm:p-6"
          x-on:click.self="closeLightbox()">
 
@@ -246,6 +272,7 @@
                        x-text="'Foto ' + (lightboxIndex + 1) + ' dari ' + lightboxPhotos.length"></p>
                 </div>
                 <button type="button"
+                        x-ref="lightboxClose"
                         x-on:click="closeLightbox()"
                         aria-label="Tutup pratinjau foto"
                         class="btn btn-ghost btn-sm min-h-[44px] min-w-[44px] cursor-pointer">
