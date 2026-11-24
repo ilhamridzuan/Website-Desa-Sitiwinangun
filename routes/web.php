@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\LoginController;
 use App\Http\Middleware\AdminAuth;
+use App\Http\Middleware\SuperAdminAuth;
 
 // ==========================================
 // Public Halaman Routes
@@ -124,5 +125,16 @@ Route::prefix('admin')->group(function () {
         // Settings / Profile
         Route::get('settings', [App\Http\Controllers\Admin\SettingController::class, 'index'])->name('admin.settings.index');
         Route::put('settings', [App\Http\Controllers\Admin\SettingController::class, 'update'])->name('admin.settings.update');
+
+        // Admin Account Management (Superadmin only)
+        Route::middleware(SuperAdminAuth::class)->prefix('users')->name('admin.users.')->group(function () {
+            Route::get('/', [App\Http\Controllers\Admin\UserController::class, 'index'])->name('index');
+            Route::get('/create', [App\Http\Controllers\Admin\UserController::class, 'create'])->name('create');
+            Route::post('/', [App\Http\Controllers\Admin\UserController::class, 'store'])->name('store');
+            Route::get('/{user}/edit', [App\Http\Controllers\Admin\UserController::class, 'edit'])->name('edit');
+            Route::put('/{user}', [App\Http\Controllers\Admin\UserController::class, 'update'])->name('update');
+            Route::patch('/{user}/toggle-active', [App\Http\Controllers\Admin\UserController::class, 'toggleActive'])->name('toggle-active');
+            Route::delete('/{user}', [App\Http\Controllers\Admin\UserController::class, 'destroy'])->name('destroy');
+        });
     });
 });
