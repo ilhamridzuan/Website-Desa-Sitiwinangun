@@ -432,3 +432,60 @@
     oklch(25% 0.032 52) 100%
   );
 }
+
+/* ============================================================
+   Accessibility & Interaction Affordances (R-32, R-39)
+   ============================================================ */
+[x-cloak] {
+  display: none !important;
+}
+
+.hero-photo.hero-paused::after,
+.hero-photo.hero-paused .hero-slide img {
+  animation-play-state: paused;
+}
+
+.hero-photo.hero-paused::after {
+  opacity: 0.35;
+}
+
+@layer base {
+  a[href],
+  button:not(:disabled),
+  summary,
+  select:not(:disabled),
+  label[for],
+  input[type="checkbox"]:not(:disabled),
+  input[type="radio"]:not(:disabled),
+  [role="button"]:not([aria-disabled="true"]) {
+    cursor: pointer;
+  }
+
+  button:disabled,
+  select:disabled,
+  input:disabled,
+  [aria-disabled="true"] {
+    cursor: not-allowed;
+  }
+
+  a:focus-visible,
+  button:focus-visible,
+  summary:focus-visible,
+  input:focus-visible,
+  select:focus-visible,
+  textarea:focus-visible,
+  [role="button"]:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-in,
+  .animate-fade-in-up,
+  .card-hover-lift {
+    animation: none !important;
+    transition: none !important;
+    transform: none !important;
+  }
+}
